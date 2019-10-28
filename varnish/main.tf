@@ -136,3 +136,10 @@ resource "kubernetes_config_map" "athene2_varnish_vcl" {
   }
 }
 
+provider "kubernetes" {
+  version = "~> 1.8"
+}
+
+provider "template" {
+  version = "~> 2.1"
+}

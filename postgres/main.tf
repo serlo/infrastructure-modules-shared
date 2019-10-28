@@ -138,3 +138,6 @@ resource "kubernetes_deployment" "postgres_deployment" {
   }
 }
 
+provider "kubernetes" {
+  version = "~> 1.8"
+}
