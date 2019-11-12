@@ -49,7 +49,6 @@ resource "kubernetes_deployment" "varnish_deployment" {
       }
 
       spec {
-        #Webserver container
         container {
           image             = var.image
           name              = "varnish-container"
@@ -62,6 +61,12 @@ resource "kubernetes_deployment" "varnish_deployment" {
           env {
             name  = "VARNISH_MEMORY"
             value = var.varnish_memory
+          }
+
+          # This ensures that changes to the config file trigger a redeployment
+          env {
+            name  = "CONFIG_CHECKSUM"
+            value = sha256(data.template_file.default_vcl_template.rendered)
           }
 
           readiness_probe {
