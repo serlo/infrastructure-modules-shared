@@ -1,134 +1,56 @@
-resource "kubernetes_service" "hydra_service" {
-  metadata {
-    name      = "hydra-service"
-    namespace = var.namespace
-  }
-
-  spec {
-    selector = {
-      app = kubernetes_deployment.hydra_deployment.metadata[0].labels.app
-    }
-
-    port {
-      port        = 4444
-      target_port = 4444
-    }
-
-    port {
-      port        = 4445
-      target_port = 4445
-    }
-
-
-    type = "ClusterIP"
-  }
+data "helm_repository" "ory" {
+  name = "ory"
+  url  = "https://k8s.ory.sh/helm/charts"
 }
-
-resource "random_string" "system_secret" {
+resource "random_string" "hydra_system_secret" {
   length  = 32
   special = false
 }
 
-resource "kubernetes_deployment" "hydra_deployment" {
-  metadata {
-    name      = "hydra-app"
-    namespace = var.namespace
+resource "helm_release" "hydra_deployment" {
+  name       = "hydra"
+  repository = data.helm_repository.ory.metadata[0].name
+  chart      = "hydra"
+  namespace  = var.namespace
+  timeout    = 100
 
-    labels = {
-      app = "hydra-app"
-    }
+  set {
+    name  = "hydra.config.secrets.system"
+    value = random_string.hydra_system_secret.result
   }
 
-  spec {
-    replicas = var.app_replicas
+  set {
+    name  = "hydra.config.dsn"
+    value = var.dsn
+  }
 
-    selector {
-      match_labels = {
-        app = "hydra-app"
-      }
-    }
+  set {
+    name  = "hydra.config.urls.self.issuer"
+    value = "https://hydra-public/"
+  }
 
-    template {
-      metadata {
-        labels = {
-          app = "hydra-app"
-        }
-      }
+  set {
+    name  = "hydra.config.urls.login"
+    value = var.url_login
+  }
 
-      spec {
-        container {
-          image             = var.image
-          name              = "hydra-container"
-          image_pull_policy = var.image_pull_policy
+  set {
+    name  = "hydra.config.urls.consent"
+    value = var.url_consent
+  }
 
-          env {
-            name  = "OAUTH2_EXPOSE_INTERNAL_ERRORS"
-            value = 0
-          }
+  set {
+    name  = "hydra.config.oidc.subject_identifiers.pairwise.salt"
+    value = var.salt
+  }
 
-          env {
-            name  = "URLS_SELF_ISSUER"
-            value = "http://localhost:4444"
-          }
+  set {
+    name  = "hydra.config.oidc.subject_identifiers.enabled"
+    value = "pairwise"
+  }
 
-          env {
-            name  = "URLS_LOGIN"
-            value = var.url_login
-          }
-
-          env {
-            name  = "URLS_CONSENT"
-            value = var.url_consent
-          }
-
-          env {
-            name  = "DSN"
-            value = var.dsn
-          }
-
-          env {
-            name  = "SECRETS_SYSTEM"
-            value = random_string.system_secret.result
-          }
-
-          env {
-            name  = "OIDC_SUBJECT_IDENTIFIERS_PAIRWISE_SALT"
-            value = var.secret
-          }
-
-          liveness_probe {
-            http_get {
-              path = "/health/alive"
-              port = 4445
-            }
-
-            initial_delay_seconds = 5
-            period_seconds        = 30
-          }
-
-          readiness_probe {
-            http_get {
-              path = "/health/ready"
-              port = 4445
-            }
-
-            initial_delay_seconds = 5
-            period_seconds        = 30
-          }
-
-          resources {
-            limits {
-              cpu    = var.container_limits_cpu
-              memory = var.container_limits_memory
-            }
-
-            requests {
-              cpu    = var.container_requests_cpu
-              memory = var.container_requests_memory
-            }
-          }
-        }
-      }
-    }
+  set {
+    name  = "hydra.autoMigrate"
+    value = true
   }
 }
