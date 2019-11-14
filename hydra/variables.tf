@@ -2,25 +2,26 @@
 # variables for module legacy-editor-renderer
 #####################################################################
 variable "namespace" {
-  description = "Namespace for all resources inside module legacy-editor-renderer."
+  description = "Namespace used"
+  type        = string
 }
 
 variable "url_login" {
-  type = string
   description = "url of login provider"
+  type        = string
 }
 
 variable "url_consent" {
-  type = string
   description = "url of consent provider"
+  type        = string
 }
 
 variable "dsn" {
-  type        = string
   description = "DSN string for Postgres database"
+  type        = string
 }
 
 variable "salt" {
+  description = "Hydra pairwise salt. THIS SHOULD NEVER BE CHANGED AFTER SET IN PRODUCTION!"
   type        = string
-  description = "Hydra pairwise salt. THIS SHOULD NEVER CHANGE AFTER SET IN PRODUCTION!"
 }

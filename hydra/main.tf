@@ -2,10 +2,6 @@ data "helm_repository" "ory" {
   name = "ory"
   url  = "https://k8s.ory.sh/helm/charts"
 }
-resource "random_string" "hydra_system_secret" {
-  length  = 32
-  special = false
-}
 
 resource "helm_release" "hydra_deployment" {
   name       = "hydra"
@@ -53,4 +49,9 @@ resource "helm_release" "hydra_deployment" {
     name  = "hydra.autoMigrate"
     value = true
   }
+}
+
+resource "random_string" "hydra_system_secret" {
+  length  = 32
+  special = false
 }
