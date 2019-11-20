@@ -25,47 +25,21 @@ resource "helm_release" "hydra_deployment" {
   timeout    = 100
 
   values = [
-    file("${path.module}/config.yaml")
+    data.template_file.config_yaml_template.rendered
   ]
+}
 
-  set {
-    name  = "hydra.config.secrets.system"
-    value = random_string.hydra_system_secret.result
-  }
+data "template_file" config_yaml_template {
+  template = file("${path.module}/config.yaml.tpl")
 
-  set {
-    name  = "hydra.config.dsn"
-    value = var.dsn
-  }
-
-  set {
-    name  = "hydra.config.urls.self.issuer"
-    value = "https://${var.public_host}"
-  }
-
-  set {
-    name  = "hydra.config.urls.login"
-    value = var.url_login
-  }
-
-  set {
-    name  = "hydra.config.urls.consent"
-    value = var.url_consent
-  }
-
-  set {
-    name  = "hydra.config.oidc.subject_identifiers.pairwise.salt"
-    value = var.salt
-  }
-
-  set {
-    name  = "hydra.config.oidc.subject_identifiers.enabled"
-    value = "pairwise"
-  }
-
-  set {
-    name  = "hydra.autoMigrate"
-    value = true
+  vars = {
+    public_host: var.public_host
+    tls_secret_name: kubernetes_secret.hydra_tls_certificate.metadata.0.name
+    dsn: var.dsn
+    salt: var.salt
+    url_login: var.url_login
+    url_consent: var.url_consent
+    system_secret: random_string.hydra_system_secret.result
   }
 }
 
