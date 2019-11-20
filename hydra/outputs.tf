@@ -3,9 +3,9 @@
 #####################################################################
 
 output "service_uri" {
-  value = "https://hydra-public"
+  value     = "https://${var.public_host}"
 }
 
 output "admin_uri" {
-  value = "http://hydra-admin:4445"
+  value     = "http://hydra-admin.${var.namespace}:4445"
 }

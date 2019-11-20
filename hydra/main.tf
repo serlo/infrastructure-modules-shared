@@ -1,3 +1,17 @@
+resource "kubernetes_secret" "hydra_tls_certificate" {
+  type = "kubernetes.io/tls"
+
+  metadata {
+    name = "hydra-tls-secret"
+    namespace = var.namespace
+  }
+
+  data = {
+    "tls.crt" = var.tls_certificate_path
+    "tls.key"  = var.tls_key_path
+  }
+}
+
 data "helm_repository" "ory" {
   name = "ory"
   url  = "https://k8s.ory.sh/helm/charts"
@@ -9,6 +23,10 @@ resource "helm_release" "hydra_deployment" {
   chart      = "hydra"
   namespace  = var.namespace
   timeout    = 100
+
+  values = [
+    file("${path.module}/config.yaml")
+  ]
 
   set {
     name  = "hydra.config.secrets.system"
@@ -22,7 +40,7 @@ resource "helm_release" "hydra_deployment" {
 
   set {
     name  = "hydra.config.urls.self.issuer"
-    value = "https://hydra-public/"
+    value = "https://${var.public_host}"
   }
 
   set {
