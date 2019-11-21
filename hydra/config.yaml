@@ -22,8 +22,8 @@ hydra:
       subject_identifiers:
         enabled:
           - pairwise
-      pairwise:
-        salt: ${salt}
+        pairwise:
+          salt: ${salt}
 
     urls:
       self:
