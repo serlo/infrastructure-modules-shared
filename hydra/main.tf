@@ -22,10 +22,10 @@ data "template_file" config_yaml_template {
     host            = var.host
     tls_secret_name = kubernetes_secret.hydra_tls_certificate.metadata.0.name
     dsn             = var.dsn
-    salt            = var.salt
+    salt            = random_password.hydra_salt.result
     url_login       = var.url_login
     url_consent     = var.url_consent
-    system_secret   = random_string.hydra_system_secret.result
+    system_secret   = random_password.hydra_system_secret.result
   }
 }
 
@@ -43,7 +43,12 @@ resource "kubernetes_secret" "hydra_tls_certificate" {
   }
 }
 
-resource "random_string" "hydra_system_secret" {
+resource "random_password" "hydra_system_secret" {
+  length  = 32
+  special = false
+}
+
+resource "random_password" "hydra_salt" {
   length  = 32
   special = false
 }
