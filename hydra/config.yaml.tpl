@@ -21,7 +21,7 @@ hydra:
     oidc:
       subject_identifiers:
         enabled:
-          -pairwise
+          - pairwise
       pairwise:
         salt: ${salt}
 

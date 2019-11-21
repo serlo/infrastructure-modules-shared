@@ -1,6 +1,3 @@
-#####################################################################
-# variables for module legacy-editor-renderer
-#####################################################################
 variable "namespace" {
   description = "Namespace used"
   type        = string
