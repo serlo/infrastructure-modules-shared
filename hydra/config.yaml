@@ -5,12 +5,12 @@ ingress:
       kubernetes.io/ingress.class: nginx
       kubernetes.io/tls-acme: "true"
     hosts:
-      - host: ${public_host}
+      - host: ${host}
         paths:
           - "/"
     tls:
       - hosts:
-          - ${public_host}
+          - ${host}
         secretName: ${tls_secret_name}
 
 hydra:
@@ -27,7 +27,7 @@ hydra:
 
     urls:
       self:
-        issuer: "https://${public_host}"
+        issuer: "https://${host}"
       login: ${url_login}
       consent: ${url_consent}
 

@@ -1,5 +1,5 @@
 variable "namespace" {
-  description = "Namespace used"
+  description = "Kubernetes namespace to use"
   type        = string
 }
 
@@ -13,9 +13,9 @@ variable "url_consent" {
   type        = string
 }
 
-variable "public_host" {
+variable "host" {
   type        = string
-  description = "public url of hydra itself"
+  description = "Public host of hydra"
 }
 
 variable "dsn" {

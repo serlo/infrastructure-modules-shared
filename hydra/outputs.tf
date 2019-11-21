@@ -1,5 +1,5 @@
 output "service_uri" {
-  value = "https://${var.public_host}"
+  value = "https://${var.host}"
 }
 
 output "admin_uri" {
