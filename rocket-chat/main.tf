@@ -4,10 +4,9 @@ resource "helm_release" "rocket-chat_deployment" {
   repository = data.helm_repository.stable.metadata[0].name
   namespace  = var.namespace
 
-
   set {
     name  = "image.tag"
-    value = "2.2.0"
+    value = var.image_tag
   }
 
   set {
@@ -27,17 +26,17 @@ resource "helm_release" "rocket-chat_deployment" {
 
   set {
     name  = "mongodb.mongodbPassword"
-    value = "password"
+    value = random_password.mongodb_password.result
   }
 
   set {
     name  = "mongodb.mongodbRootPassword"
-    value = "password"
+    value = random_password.mongodb_root_password.result
   }
 
   set {
     name  = "mongodb.mongodbUsername"
-    value = "username"
+    value = "rocket-chat"
   }
 
   set {
@@ -91,6 +90,20 @@ data "helm_repository" "stable" {
   url  = "https://kubernetes-charts.storage.googleapis.com/"
 }
 
+resource "random_password" "mongodb_password" {
+  length  = 32
+  special = false
+}
+
+resource "random_password" "mongodb_root_password" {
+  length  = 32
+  special = false
+}
+
 provider "helm" {
   version = "~> 0.10"
+}
+
+provider "random" {
+  version = "~> 2.2"
 }
