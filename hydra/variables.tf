@@ -1,6 +1,3 @@
-#####################################################################
-# variables for module legacy-editor-renderer
-#####################################################################
 variable "namespace" {
   description = "Namespace used"
   type        = string
@@ -16,6 +13,11 @@ variable "url_consent" {
   type        = string
 }
 
+variable "public_host" {
+  type        = string
+  description = "public url of hydra itself"
+}
+
 variable "dsn" {
   description = "DSN string for Postgres database"
   type        = string
@@ -24,4 +26,14 @@ variable "dsn" {
 variable "salt" {
   description = "Hydra pairwise salt. THIS SHOULD NEVER BE CHANGED AFTER SET IN PRODUCTION!"
   type        = string
+}
+
+variable "tls_certificate_path" {
+  type        = string
+  description = "Path to tls certificate"
+}
+
+variable "tls_key_path" {
+  type        = string
+  description = "Path to tls key"
 }
