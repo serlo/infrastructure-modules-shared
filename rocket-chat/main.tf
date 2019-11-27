@@ -1,5 +1,7 @@
 locals {
-  bucket = "${var.mongodump.bucket_prefix}-rocket-chat-mongodump"
+  bucket          = "${var.mongodump.bucket_prefix}-rocket-chat-mongodump"
+  mongo_uri       = "mongodb://rocket-chat:${random_password.mongodb_password.result}@rocket-chat-mongodb-headless:27017/rocket-chat-db?replicaSet=rs0"
+  mongo_oplog_uri = "mongodb://root:${random_password.mongodb_root_password.result}@rocket-chat-mongodb-headless:27017/local?replicaSet=rs0&authSource=admin"
 }
 
 resource "helm_release" "rocket-chat_deployment" {
@@ -87,6 +89,16 @@ resource "helm_release" "rocket-chat_deployment" {
     name  = "ingress.path"
     value = "/"
   }
+
+  set {
+    name  = "externalMongodbUrl"
+    value = local.mongo_uri
+  }
+
+  set {
+    name  = "externalMongodbOplogUrl"
+    value = local.mongo_oplog_uri
+  }
 }
 
 resource "kubernetes_cron_job" "mongodump" {
@@ -157,7 +169,7 @@ data "template_file" run_sh {
   template = file("${path.module}/run.sh")
 
   vars = {
-    database_uri = "mongodb://rocket-chat:${random_password.mongodb_password.result}@rocket-chat-mongodb:27017/rocket-chat-db"
+    database_uri = local.mongo_uri
 
     bucket_url                 = "gs://${local.bucket}"
     bucket_service_account_key = base64decode(google_service_account_key.mongodump.private_key)
