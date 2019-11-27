@@ -12,3 +12,13 @@ variable "host" {
   description = "Public host"
   type        = string
 }
+
+variable "mongodump" {
+  description = "Configuration for mongodump"
+  type = object({
+    image    = string
+    schedule = string
+
+    bucket_prefix = string
+  })
+}
