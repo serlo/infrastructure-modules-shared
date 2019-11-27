@@ -22,3 +22,7 @@ variable "mongodump" {
     bucket_prefix = string
   })
 }
+
+variable "smtp_password" {
+  type = string
+}

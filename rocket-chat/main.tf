@@ -99,6 +99,31 @@ resource "helm_release" "rocket-chat_deployment" {
     name  = "externalMongodbOplogUrl"
     value = local.mongo_oplog_uri
   }
+
+  set {
+    name  = "smtp.enabled"
+    value = true
+  }
+
+  set {
+    name  = "smtp.username"
+    value = "SMTP_Injection"
+  }
+
+  set {
+    name  = "smtp.password"
+    value = var.smtp_password
+  }
+
+  set {
+    name  = "smtp.host"
+    value = "smtp.eu.sparkpostmail.com"
+  }
+
+  set {
+    name  = "smtp.port"
+    value = 2525
+  }
 }
 
 resource "kubernetes_cron_job" "mongodump" {
