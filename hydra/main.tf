@@ -29,6 +29,16 @@ data "template_file" config_yaml_template {
   }
 }
 
+resource "random_password" "hydra_system_secret" {
+  length  = 32
+  special = false
+}
+
+resource "random_password" "hydra_salt" {
+  length  = 32
+  special = false
+}
+
 resource "kubernetes_secret" "hydra_tls_certificate" {
   type = "kubernetes.io/tls"
 
@@ -38,19 +48,18 @@ resource "kubernetes_secret" "hydra_tls_certificate" {
   }
 
   data = {
-    "tls.crt" = var.tls_certificate_path
-    "tls.key" = var.tls_key_path
+    "tls.crt" = module.cert.crt
+    "tls.key" = module.cert.key
   }
 }
 
-resource "random_password" "hydra_system_secret" {
-  length  = 32
-  special = false
-}
+module "cert" {
+  source = "../tls-self-signed-cert"
+  domain = var.host
 
-resource "random_password" "hydra_salt" {
-  length  = 32
-  special = false
+  providers = {
+    tls = "tls"
+  }
 }
 
 provider "helm" {
@@ -66,5 +75,9 @@ provider "random" {
 }
 
 provider "template" {
+  version = "~> 2.1"
+}
+
+provider "tls" {
   version = "~> 2.1"
 }

@@ -22,13 +22,3 @@ variable "dsn" {
   description = "DSN string for Postgres database"
   type        = string
 }
-
-variable "tls_certificate_path" {
-  type        = string
-  description = "Path to tls certificate"
-}
-
-variable "tls_key_path" {
-  type        = string
-  description = "Path to tls key"
-}

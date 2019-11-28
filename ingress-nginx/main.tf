@@ -5,11 +5,20 @@ resource "kubernetes_secret" "ingress_nginx_tls_secret" {
   }
 
   data = {
-    "tls.crt" = file(var.tls_certificate_path)
-    "tls.key" = file(var.tls_key_path)
+    "tls.crt" = module.cert.crt
+    "tls.key" = module.cert.key
   }
 
   type = "kubernetes.io/tls"
+}
+
+module "cert" {
+  source = "../tls-self-signed-cert"
+  domain = var.domain
+
+  providers = {
+    tls = "tls"
+  }
 }
 
 resource "kubernetes_service" "ingress_nginx_service" {
@@ -307,4 +316,8 @@ resource "kubernetes_deployment" "nginx_ingress_deployment" {
 
 provider "kubernetes" {
   version = "~> 1.8"
+}
+
+provider "tls" {
+  version = "~> 2.1"
 }
