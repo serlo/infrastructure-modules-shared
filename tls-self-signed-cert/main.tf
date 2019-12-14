@@ -1,7 +1,7 @@
 
 resource "tls_self_signed_cert" "crt" {
-  key_algorithm   = "${tls_private_key.key.algorithm}"
-  private_key_pem = "${tls_private_key.key.private_key_pem}"
+  key_algorithm   = tls_private_key.key.algorithm
+  private_key_pem = tls_private_key.key.private_key_pem
 
   validity_period_hours = 365 * 24
   early_renewal_hours   = 30 * 24

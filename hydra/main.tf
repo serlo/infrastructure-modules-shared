@@ -58,7 +58,7 @@ module "cert" {
   domain = var.host
 
   providers = {
-    tls = "tls"
+    tls = tls
   }
 }
 

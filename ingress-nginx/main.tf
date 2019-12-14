@@ -17,7 +17,7 @@ module "cert" {
   domain = var.domain
 
   providers = {
-    tls = "tls"
+    tls = tls
   }
 }
 
