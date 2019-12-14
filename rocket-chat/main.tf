@@ -229,11 +229,10 @@ resource "google_service_account_key" "mongodump" {
   service_account_id = "${google_service_account.mongodump.name}"
 }
 
-resource "google_storage_bucket_iam_binding" "mongodump" {
+resource "google_storage_bucket_iam_member" "mongodump" {
   bucket = google_storage_bucket.mongodump.name
   role   = "roles/storage.objectAdmin"
-
-  members = ["serviceAccount:${google_service_account.mongodump.email}"]
+  member = "serviceAccount:${google_service_account.mongodump.email}"
 }
 
 provider "kubernetes" {
