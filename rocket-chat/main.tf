@@ -226,7 +226,7 @@ resource "google_service_account" "mongodump" {
 }
 
 resource "google_service_account_key" "mongodump" {
-  service_account_id = "${google_service_account.mongodump.name}"
+  service_account_id = google_service_account.mongodump.name
 }
 
 resource "google_storage_bucket_iam_member" "mongodump" {
