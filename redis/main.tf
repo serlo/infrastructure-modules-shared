@@ -10,17 +10,17 @@ resource "helm_release" "redis" {
   }
 
   set {
-    name = "cluster.enabled"
+    name  = "cluster.enabled"
     value = true
   }
 
   set {
-    name = "cluster.slaveCount"
+    name  = "cluster.slaveCount"
     value = 0
   }
 
   set {
-    name = "usePassword"
+    name  = "usePassword"
     value = false
   }
 }
