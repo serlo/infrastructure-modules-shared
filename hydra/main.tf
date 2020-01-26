@@ -56,8 +56,4 @@ resource "kubernetes_secret" "hydra_tls_certificate" {
 module "cert" {
   source = "../tls-self-signed-cert"
   domain = var.host
-
-  providers = {
-    tls = tls
-  }
 }
