@@ -15,10 +15,6 @@ resource "kubernetes_secret" "ingress_nginx_tls_secret" {
 module "cert" {
   source = "../tls-self-signed-cert"
   domain = var.domain
-
-  providers = {
-    tls = tls
-  }
 }
 
 resource "kubernetes_service" "ingress_nginx_service" {
