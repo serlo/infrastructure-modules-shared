@@ -313,11 +313,3 @@ resource "kubernetes_deployment" "nginx_ingress_deployment" {
     }
   }
 }
-
-provider "kubernetes" {
-  version = "~> 1.8"
-}
-
-provider "tls" {
-  version = "~> 2.1"
-}

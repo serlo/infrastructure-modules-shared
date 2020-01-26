@@ -132,7 +132,3 @@ resource "kubernetes_deployment" "mysql_deployment" {
     }
   }
 }
-
-provider "kubernetes" {
-  version = "~> 1.8"
-}

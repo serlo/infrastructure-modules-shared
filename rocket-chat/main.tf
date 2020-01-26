@@ -234,23 +234,3 @@ resource "google_storage_bucket_iam_member" "mongodump" {
   role   = "roles/storage.objectAdmin"
   member = "serviceAccount:${google_service_account.mongodump.email}"
 }
-
-provider "kubernetes" {
-  version = "~> 1.8"
-}
-
-provider "google" {
-  version = "~> 2.18"
-}
-
-provider "helm" {
-  version = "~> 0.10"
-}
-
-provider "random" {
-  version = "~> 2.2"
-}
-
-provider "template" {
-  version = "~> 2.1"
-}

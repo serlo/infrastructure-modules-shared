@@ -61,23 +61,3 @@ module "cert" {
     tls = tls
   }
 }
-
-provider "helm" {
-  version = "~> 0.10"
-}
-
-provider "kubernetes" {
-  version = "~> 1.8"
-}
-
-provider "random" {
-  version = "~> 2.2"
-}
-
-provider "template" {
-  version = "~> 2.1"
-}
-
-provider "tls" {
-  version = "~> 2.1"
-}

@@ -22,7 +22,3 @@ resource "tls_self_signed_cert" "crt" {
 resource "tls_private_key" "key" {
   algorithm = "RSA"
 }
-
-provider "tls" {
-  version = "~> 2.1"
-}
