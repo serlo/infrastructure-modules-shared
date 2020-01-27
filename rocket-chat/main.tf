@@ -1,7 +1,7 @@
 locals {
   bucket          = "${var.mongodump.bucket_prefix}-rocket-chat-mongodump"
-  mongo_uri       = "mongodb://rocket-chat:${random_password.mongodb_password.result}@rocket-chat-mongodb-headless:27017/rocket-chat-db?replicaSet=rs0"
-  mongo_oplog_uri = "mongodb://root:${random_password.mongodb_root_password.result}@rocket-chat-mongodb-headless:27017/local?replicaSet=rs0&authSource=admin"
+  mongo_uri       = "mongodb://rocket-chat:${random_password.mongodb_password.result}@rocket-chat-mongodb-primary-0.rocket-chat-mongodb-headless,rocket-chat-mongodb-secondary-0.rocket-chat-mongodb-headless,rocket-chat-mongodb-arbiter-0.rocket-chat-mongodb-headless:27017/rocket-chat-db?replicaSet=rs0"
+  mongo_oplog_uri = "mongodb://root:${random_password.mongodb_root_password.result}@rocket-chat-mongodb-primary-0.rocket-chat-mongodb-headless,rocket-chat-mongodb-secondary-0.rocket-chat-mongodb-headless,rocket-chat-mongodb-arbiter-0.rocket-chat-mongodb-headless:27017/local?replicaSet=rs0&authSource=admin"
 }
 
 resource "helm_release" "rocket-chat_deployment" {
@@ -92,12 +92,12 @@ resource "helm_release" "rocket-chat_deployment" {
 
   set {
     name  = "externalMongodbUrl"
-    value = local.mongo_uri
+    value = replace(replace(local.mongo_uri, ",", "\\,"), ".", "\\.")
   }
 
   set {
     name  = "externalMongodbOplogUrl"
-    value = local.mongo_oplog_uri
+    value = replace(replace(local.mongo_oplog_uri, ",", "\\,"), ".", "\\.")
   }
 
   set {
