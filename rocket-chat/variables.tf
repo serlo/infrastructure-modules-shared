@@ -8,6 +8,10 @@ variable "image_tag" {
   type        = string
 }
 
+variable "app_replicas" {
+  description = "Number of rocket chat replicas"
+}
+
 variable "host" {
   description = "Public host"
   type        = string

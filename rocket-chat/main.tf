@@ -22,7 +22,7 @@ resource "helm_release" "rocket-chat_deployment" {
 
   set {
     name  = "replicaCount"
-    value = "1"
+    value = var.app_replicas
   }
 
   set {
