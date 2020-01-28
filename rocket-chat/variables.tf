@@ -10,6 +10,7 @@ variable "image_tag" {
 
 variable "app_replicas" {
   description = "Number of rocket chat replicas"
+  type        = number
 }
 
 variable "host" {
