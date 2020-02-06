@@ -2,6 +2,7 @@ resource "helm_release" "hydra_deployment" {
   name       = "hydra"
   repository = data.helm_repository.ory.metadata[0].name
   chart      = "hydra"
+  version    = var.chart_version
   namespace  = var.namespace
   timeout    = 100
 
@@ -20,6 +21,7 @@ data "template_file" config_yaml_template {
 
   vars = {
     host            = var.host
+    image_tag       = var.image_tag
     tls_secret_name = kubernetes_secret.hydra_tls_certificate.metadata.0.name
     dsn             = var.dsn
     salt            = random_password.hydra_salt.result

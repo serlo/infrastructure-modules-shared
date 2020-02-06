@@ -1,3 +1,6 @@
+image:
+  tag: ${image_tag}
+
 ingress:
   public:
     enabled: true

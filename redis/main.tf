@@ -1,7 +1,8 @@
 resource "helm_release" "redis" {
   name       = "redis"
-  chart      = "stable/redis"
   repository = data.helm_repository.stable.metadata[0].name
+  chart      = "stable/redis"
+  version    = var.chart_version
   namespace  = var.namespace
 
   set {

@@ -6,8 +6,9 @@ locals {
 
 resource "helm_release" "rocket-chat_deployment" {
   name       = "rocket-chat"
-  chart      = "stable/rocketchat"
   repository = data.helm_repository.stable.metadata[0].name
+  chart      = "stable/rocketchat"
+  version    = var.chart_version
   namespace  = var.namespace
 
   set {

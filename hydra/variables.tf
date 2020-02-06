@@ -22,3 +22,13 @@ variable "dsn" {
   description = "DSN string for Postgres database"
   type        = string
 }
+
+variable "chart_version" {
+  type        = string
+  description = "Hydra chart version to use"
+}
+
+variable "image_tag" {
+  type        = string
+  description = "Hydra image tag to use"
+}

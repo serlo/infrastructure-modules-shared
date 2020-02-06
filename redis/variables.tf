@@ -3,7 +3,12 @@ variable "namespace" {
   type        = string
 }
 
-variable "image_tag" {
-  description = "Rocket Chat image tag to use"
+variable "chart_version" {
   type        = string
+  description = "Redis chart version to use"
+}
+
+variable "image_tag" {
+  type        = string
+  description = "Redis image tag to use"
 }

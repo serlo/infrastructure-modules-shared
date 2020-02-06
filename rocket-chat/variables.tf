@@ -3,11 +3,6 @@ variable "namespace" {
   type        = string
 }
 
-variable "image_tag" {
-  description = "Rocket Chat image tag to use"
-  type        = string
-}
-
 variable "app_replicas" {
   description = "Number of rocket chat replicas"
   type        = number
@@ -31,3 +26,14 @@ variable "mongodump" {
 variable "smtp_password" {
   type = string
 }
+
+variable "chart_version" {
+  type        = string
+  description = "Rocket Chat chart version to use"
+}
+
+variable "image_tag" {
+  type        = string
+  description = "Rocket Chat image tag to use"
+}
+
