@@ -7,7 +7,7 @@ resource "helm_release" "hydra_deployment" {
   timeout    = 100
 
   values = [
-    data.template_file.config_yaml_template.rendered
+    data.template_file.values_yaml_template.rendered
   ]
 }
 
@@ -16,8 +16,8 @@ data "helm_repository" "ory" {
   url  = "https://k8s.ory.sh/helm/charts"
 }
 
-data "template_file" config_yaml_template {
-  template = file("${path.module}/config.yaml")
+data "template_file" "values_yaml_template" {
+  template = file("${path.module}/values.yaml")
 
   vars = {
     host            = var.host

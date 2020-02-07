@@ -1,7 +1,7 @@
 locals {
-  bucket          = "${var.mongodump.bucket_prefix}-rocket-chat-mongodump"
-  mongo_uri       = "mongodb://rocket-chat:${random_password.mongodb_password.result}@rocket-chat-mongodb-primary-0.rocket-chat-mongodb-headless,rocket-chat-mongodb-secondary-0.rocket-chat-mongodb-headless,rocket-chat-mongodb-arbiter-0.rocket-chat-mongodb-headless:27017/rocket-chat-db?replicaSet=rs0"
-  mongo_oplog_uri = "mongodb://root:${random_password.mongodb_root_password.result}@rocket-chat-mongodb-primary-0.rocket-chat-mongodb-headless,rocket-chat-mongodb-secondary-0.rocket-chat-mongodb-headless,rocket-chat-mongodb-arbiter-0.rocket-chat-mongodb-headless:27017/local?replicaSet=rs0&authSource=admin"
+  bucket            = "${var.mongodump.bucket_prefix}-rocket-chat-mongodump"
+  mongodb_uri       = "mongodb://rocket-chat:${random_password.mongodb_password.result}@rocket-chat-mongodb-primary-0.rocket-chat-mongodb-headless,rocket-chat-mongodb-secondary-0.rocket-chat-mongodb-headless,rocket-chat-mongodb-arbiter-0.rocket-chat-mongodb-headless:27017/rocket-chat-db?replicaSet=rs0"
+  mongodb_oplog_uri = "mongodb://root:${random_password.mongodb_root_password.result}@rocket-chat-mongodb-primary-0.rocket-chat-mongodb-headless,rocket-chat-mongodb-secondary-0.rocket-chat-mongodb-headless,rocket-chat-mongodb-arbiter-0.rocket-chat-mongodb-headless:27017/local?replicaSet=rs0&authSource=admin"
 }
 
 resource "helm_release" "rocket-chat_deployment" {
@@ -11,119 +11,32 @@ resource "helm_release" "rocket-chat_deployment" {
   version    = var.chart_version
   namespace  = var.namespace
 
-  set {
-    name  = "image.tag"
-    value = var.image_tag
-  }
+  values = [
+    data.template_file.values_yaml_template.rendered
+  ]
+}
 
-  set {
-    name  = "host"
-    value = var.host
-  }
+data "template_file" "values_yaml_template" {
+  template = file("${path.module}/values.yaml")
 
-  set {
-    name  = "replicaCount"
-    value = var.app_replicas
-  }
+  vars = {
+    image_tag    = var.image_tag
+    host         = var.host
+    app_replicas = var.app_replicas
 
-  set {
-    name  = "minAvailable"
-    value = "1"
-  }
+    mongodb_uri           = local.mongodb_uri
+    mongodb_oplog_uri     = local.mongodb_oplog_uri
+    mongodb_database      = "rocket-chat-db"
+    mongodb_username      = "rocket-chat"
+    mongodb_password      = random_password.mongodb_password.result
+    mongodb_root_password = random_password.mongodb_root_password.result
 
-  set {
-    name  = "mongodb.mongodbPassword"
-    value = random_password.mongodb_password.result
-  }
+    smtp_host     = "smtp.eu.sparkpostmail.com"
+    smtp_port     = 2525
+    smtp_username = "SMTP_Injection"
+    smtp_password = var.smtp_password
 
-  set {
-    name  = "mongodb.mongodbRootPassword"
-    value = random_password.mongodb_root_password.result
-  }
-
-  set {
-    name  = "mongodb.mongodbUsername"
-    value = "rocket-chat"
-  }
-
-  set {
-    name  = "mongodb.mongodbDatabase"
-    value = "rocket-chat-db"
-  }
-
-  set {
-    name  = "mongodb.replicaSet.enabled"
-    value = "true"
-  }
-
-  set {
-    name  = "mongodb.replicaSet.replicas.secondary"
-    value = "1"
-  }
-
-  set {
-    name  = "mongodb.replicaSet.pdb.minAvailable.secondary"
-    value = "1"
-  }
-
-  set {
-    name  = "mongodb.replicaSet.replicas.arbiter"
-    value = "1"
-  }
-
-  set {
-    name  = "mongodb.replicaSet.pdb.minAvailable.arbiter"
-    value = "1"
-  }
-
-  set {
-    name  = "ingress.enabled"
-    value = "true"
-  }
-
-  set {
-    name  = "ingress.annotations.kubernetes\\.io/ingress\\.class"
-    value = "nginx"
-  }
-
-  set {
-    name  = "ingress.path"
-    value = "/"
-  }
-
-  set {
-    name  = "externalMongodbUrl"
-    value = replace(replace(local.mongo_uri, ",", "\\,"), ".", "\\.")
-  }
-
-  set {
-    name  = "externalMongodbOplogUrl"
-    value = replace(replace(local.mongo_oplog_uri, ",", "\\,"), ".", "\\.")
-  }
-
-  set {
-    name  = "smtp.enabled"
-    value = true
-  }
-
-  set {
-    name  = "smtp.username"
-    value = "SMTP_Injection"
-  }
-
-  set {
-    name  = "smtp.password"
-    value = var.smtp_password
-  }
-
-  set {
-    name  = "smtp.host"
-    value = "smtp.eu.sparkpostmail.com"
-  }
-
-  set {
-    name  = "smtp.port"
-    value = 2525
+    tls_secret_name = kubernetes_secret.rocket_chat_tls_certificate.metadata.0.name
   }
 }
 
@@ -195,7 +108,7 @@ data "template_file" run_sh {
   template = file("${path.module}/run.sh")
 
   vars = {
-    database_uri = local.mongo_uri
+    database_uri = local.mongodb_uri
 
     bucket_url                 = "gs://${local.bucket}"
     bucket_service_account_key = base64decode(google_service_account_key.mongodump.private_key)
@@ -234,4 +147,23 @@ resource "google_storage_bucket_iam_member" "mongodump" {
   bucket = google_storage_bucket.mongodump.name
   role   = "roles/storage.objectAdmin"
   member = "serviceAccount:${google_service_account.mongodump.email}"
+}
+
+resource "kubernetes_secret" "rocket_chat_tls_certificate" {
+  type = "kubernetes.io/tls"
+
+  metadata {
+    name      = "rocket-chat-tls"
+    namespace = var.namespace
+  }
+
+  data = {
+    "tls.crt" = module.cert.crt
+    "tls.key" = module.cert.key
+  }
+}
+
+module "cert" {
+  source = "../tls-self-signed-cert"
+  domain = var.host
 }
