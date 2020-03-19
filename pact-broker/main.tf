@@ -23,15 +23,15 @@ variable "database" {
   })
 }
 
-resource "kubernetes_service" "pact_broker" {
+resource "kubernetes_service" "pact" {
   metadata {
-    name      = "pact-broker"
+    name      = "pact"
     namespace = var.namespace
   }
 
   spec {
     selector = {
-      app = kubernetes_deployment.pact_broker.metadata[0].labels.app
+      app = kubernetes_deployment.pact.metadata[0].labels.app
     }
 
     port {
@@ -43,7 +43,7 @@ resource "kubernetes_service" "pact_broker" {
   }
 }
 
-resource "kubernetes_deployment" "pact_broker" {
+resource "kubernetes_deployment" "pact" {
   metadata {
     name      = "pact-broker"
     namespace = var.namespace
@@ -107,13 +107,14 @@ resource "kubernetes_deployment" "pact_broker" {
 
           env {
             name  = "PACT_BROKER_BASIC_AUTH_PASSWORD"
-            value = random_password.pact_broker_password.result
+            value = random_password.pact_password.result
           }
 
           env {
             name  = "PACT_BROKER_ALLOW_PUBLIC_READ"
             value = "true"
           }
+
           env {
             name  = "PACT_BROKER_PUBLIC_HEARTBEAT"
             value = "true"
@@ -135,14 +136,14 @@ resource "kubernetes_deployment" "pact_broker" {
 }
 
 output "service_name" {
-  value = kubernetes_service.pact_broker.metadata[0].name
+  value = kubernetes_service.pact.metadata[0].name
 }
 
 output "service_port" {
-  value = kubernetes_service.pact_broker.spec[0].port[0].port
+  value = kubernetes_service.pact.spec[0].port[0].port
 }
 
-resource "random_password" "pact_broker_password" {
+resource "random_password" "pact_password" {
   length  = 32
   special = false
 }
