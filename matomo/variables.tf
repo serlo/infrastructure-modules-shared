@@ -7,7 +7,7 @@ variable "image_tag" {
 }
 
 variable "namespace" {
-  default     = "athene2"
+  default     = "matomo"
   description = "Namespace for all resources inside module editor-renderer."
 }
 

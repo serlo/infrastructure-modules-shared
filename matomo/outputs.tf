@@ -1,15 +1,10 @@
 #####################################################################
-# outputs for module editor-renderer
+# outputs for module matomo
 #####################################################################
-output "cluster_ip" {
-  value     = kubernetes_service.matomo_service.spec[0].cluster_ip
-  sensitive = true
+output "matomo_service_name" {
+  value = kubernetes_service.matomo_service.metadata[0].name
 }
 
-
-output "service_uri" {
-  value     = "http://${kubernetes_service.matomo_service.spec[0].cluster_ip}:${kubernetes_service.matomo_service.spec[0].port[0].port}"
-  sensitive = true
+output "matomo_service_port" {
+  value = kubernetes_service.matomo_service.spec[0].port[0].port
 }
-
-
