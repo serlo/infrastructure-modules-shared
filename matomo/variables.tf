@@ -66,3 +66,8 @@ variable "database_name" {
   default     = "matomo"
   description = "Database name to use for matomo data"
 }
+
+variable "persistent_disk_name" {
+  type        = string
+  description = "Name of the persistent GCE disk for matomo"
+}
