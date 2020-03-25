@@ -144,6 +144,7 @@ resource "kubernetes_persistent_volume" "matomo_volume" {
         fs_type = "ext4"
       }
     }
+    storage_class_name = "standard"
   }
 }
 
