@@ -125,7 +125,7 @@ resource "kubernetes_persistent_volume_claim" "matomo_pvc" {
         storage = "5Gi"
       }
     }
-    volume_name = "${kubernetes_persistent_volume.matomo_volume.metadata.0.name}"
+    volume_name = kubernetes_persistent_volume.matomo_volume.metadata.0.name
   }
 }
 
