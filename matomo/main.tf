@@ -141,7 +141,7 @@ resource "kubernetes_persistent_volume" "matomo_volume" {
     persistent_volume_source {
       gce_persistent_disk {
         pd_name = var.persistent_disk_name
-        fsType  = "ext4"
+        fs_type = "ext4"
       }
     }
   }
