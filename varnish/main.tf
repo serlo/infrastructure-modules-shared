@@ -1,12 +1,41 @@
-resource "kubernetes_service" "varnish_service" {
+locals {
+  name = "varnish"
+}
+
+variable "namespace" {
+  description = "Kubernetes namespace to use"
+  type        = string
+}
+
+variable "image_tag" {
+  description = "Docker image tag to use"
+  type        = string
+}
+
+variable "image_pull_policy" {
+  description = "image pull policy"
+  type        = string
+}
+
+variable "host" {
+  description = "Host of the backend"
+  type        = string
+}
+
+variable "readiness_probe_http_path" {
+  description = "Path for HTTP GET request triggered by readiness probe"
+  type        = string
+}
+
+resource "kubernetes_service" "varnish" {
   metadata {
-    name      = "varnish-service"
+    name      = local.name
     namespace = var.namespace
   }
 
   spec {
     selector = {
-      app = kubernetes_deployment.varnish_deployment.metadata[0].labels.app
+      app = local.name
     }
 
     port {
@@ -18,40 +47,52 @@ resource "kubernetes_service" "varnish_service" {
   }
 }
 
-resource "kubernetes_deployment" "varnish_deployment" {
+output "service_name" {
+  value = kubernetes_service.varnish.metadata[0].name
+}
+
+output "service_port" {
+  value = kubernetes_service.varnish.spec[0].port[0].port
+}
+
+
+resource "kubernetes_deployment" "varnish" {
   metadata {
-    name      = "varnish-app"
+    name      = local.name
     namespace = var.namespace
 
     labels = {
-      app = "varnish"
+      app = local.name
     }
   }
 
   spec {
-    replicas = var.app_replicas
-
     selector {
       match_labels = {
-        app = "varnish"
+        app = local.name
       }
     }
 
     strategy {
       type = "RollingUpdate"
+
+      rolling_update {
+        max_surge       = "1"
+        max_unavailable = "1"
+      }
     }
 
     template {
       metadata {
         labels = {
-          app = "varnish"
+          app = local.name
         }
       }
 
       spec {
         container {
-          image             = var.image
-          name              = "varnish-container"
+          image             = "eu.gcr.io/serlo-shared/varnish:${var.image_tag}"
+          name              = local.name
           image_pull_policy = var.image_pull_policy
 
           port {
@@ -60,20 +101,21 @@ resource "kubernetes_deployment" "varnish_deployment" {
 
           env {
             name  = "VARNISH_MEMORY"
-            value = var.varnish_memory
+            value = "500M"
           }
 
           # This ensures that changes to the config file trigger a redeployment
           env {
             name  = "CONFIG_CHECKSUM"
-            value = sha256(data.template_file.default_vcl_template.rendered)
+            value = sha256(data.template_file.varnish.rendered)
           }
 
           readiness_probe {
             http_get {
-              path = var.readiness_http_path
+              path = var.readiness_probe_http_path
               port = 80
             }
+
             initial_delay_seconds = 5
             period_seconds        = 30
             failure_threshold     = 3
@@ -83,28 +125,28 @@ resource "kubernetes_deployment" "varnish_deployment" {
 
           resources {
             limits {
-              cpu    = var.resources_limits_cpu
-              memory = var.resources_limits_memory
+              cpu    = "75m"
+              memory = "750Mi"
             }
 
             requests {
-              cpu    = var.resources_requests_cpu
-              memory = var.resources_requests_memory
+              cpu    = "50m"
+              memory = "500Mi"
             }
           }
 
           volume_mount {
-            name       = "varnish-config-volume"
+            name       = local.name
             mount_path = "/etc/varnish/default.vcl"
             sub_path   = "default.vcl"
           }
         }
 
         volume {
-          name = "varnish-config-volume"
+          name = local.name
 
           config_map {
-            name = kubernetes_config_map.athene2_varnish_vcl.metadata.0.name
+            name = kubernetes_config_map.varnish.metadata.0.name
 
             items {
               key  = "default.vcl"
@@ -118,25 +160,22 @@ resource "kubernetes_deployment" "varnish_deployment" {
   }
 }
 
-data "template_file" "default_vcl_template" {
-  template = file("${path.module}/default.vcl")
-
-  vars = {
-    backend_ip = var.backend_ip
-  }
-}
-
-resource "kubernetes_config_map" "athene2_varnish_vcl" {
+resource "kubernetes_config_map" "varnish" {
   metadata {
-    name      = "athene2-varnish-vcl"
+    name      = "default.vcl"
     namespace = var.namespace
-
-    labels = {
-      app = "varnish"
-    }
   }
 
   data = {
-    "default.vcl" = data.template_file.default_vcl_template.rendered
+    "default.vcl" = data.template_file.varnish.rendered
   }
 }
+
+data "template_file" "varnish" {
+  template = file("${path.module}/default.vcl")
+
+  vars = {
+    host = var.host
+  }
+}
+

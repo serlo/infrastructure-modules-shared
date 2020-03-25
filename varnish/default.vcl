@@ -1,6 +1,6 @@
 vcl 4.0;
 backend default {
-  .host = "${backend_ip}";
+  .host = "${host}";
   .port = "80";
 
   # How long to wait before we receive a first byte from our backend?
