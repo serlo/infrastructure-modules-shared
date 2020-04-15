@@ -116,16 +116,18 @@ resource "kubernetes_deployment" "matomo_deployment" {
 
 resource "kubernetes_persistent_volume_claim" "matomo_pvc" {
   metadata {
-    name = "matomo-volume-claim"
+    name      = "matomo-volume-claim"
+    namespace = var.namespace
   }
   spec {
     access_modes = ["ReadWriteMany"]
+    volume_name  = kubernetes_persistent_volume.matomo_volume.metadata.0.name
+
     resources {
       requests = {
         storage = "5Gi"
       }
     }
-    volume_name = kubernetes_persistent_volume.matomo_volume.metadata.0.name
   }
 }
 
@@ -137,14 +139,16 @@ resource "kubernetes_persistent_volume" "matomo_volume" {
     capacity = {
       storage = "10Gi"
     }
-    access_modes = ["ReadWriteMany"]
+
+    access_modes       = ["ReadWriteMany"]
+    storage_class_name = "standard"
+
     persistent_volume_source {
       gce_persistent_disk {
         pd_name = var.persistent_disk_name
         fs_type = "ext4"
       }
     }
-    storage_class_name = "standard"
   }
 }
 
