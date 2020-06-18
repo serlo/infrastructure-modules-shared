@@ -6,7 +6,7 @@ locals {
 
 resource "helm_release" "rocket-chat_deployment" {
   name       = "rocket-chat"
-  repository = data.helm_repository.stable.metadata[0].name
+  repository = "https://kubernetes-charts.storage.googleapis.com/"
   chart      = "stable/rocketchat"
   version    = var.chart_version
   namespace  = var.namespace
@@ -113,11 +113,6 @@ data "template_file" run_sh {
     bucket_url                 = "gs://${local.bucket}"
     bucket_service_account_key = base64decode(google_service_account_key.mongodump.private_key)
   }
-}
-
-data "helm_repository" "stable" {
-  name = "stable"
-  url  = "https://kubernetes-charts.storage.googleapis.com/"
 }
 
 resource "random_password" "mongodb_password" {
