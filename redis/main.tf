@@ -26,22 +26,22 @@ resource "helm_release" "redis" {
   }
 
   set {
-    name = "master.resources.limits.cpu"
+    name  = "master.resources.limits.cpu"
     value = "200m"
   }
 
   set {
-    name = "master.resources.limits.memory"
+    name  = "master.resources.limits.memory"
     value = "200Mi"
   }
 
   set {
-    name = "master.resources.requests.cpu"
+    name  = "master.resources.requests.cpu"
     value = "100m"
   }
 
   set {
-    name = "master.resources.requests.memory"
+    name  = "master.resources.requests.memory"
     value = "100Mi"
   }
 }
