@@ -12,6 +12,13 @@ smtp:
   username: ${smtp_username}
   password: ${smtp_password}
 
+resources:
+  limits:
+    cpu: 200m
+    memory: 1600Mi
+  requests:
+    cpu: 100m
+    memory: 800Mi
 
 mongodb:
   mongodbDatabase: ${mongodb_database}
@@ -27,6 +34,13 @@ mongodb:
         minAvailable:
           arbiter: 1
           secondary: 1
+  resources:
+    limits:
+      cpu: 200m
+      memory: 2000Mi
+    requests:
+      cpu: 100m
+      memory: 1000Mi
 
 ingress:
   enabled: true
