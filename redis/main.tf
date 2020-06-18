@@ -1,6 +1,6 @@
 resource "helm_release" "redis" {
   name       = "redis"
-  repository = data.helm_repository.stable.metadata[0].name
+  repository = "https://kubernetes-charts.storage.googleapis.com/"
   chart      = "stable/redis"
   version    = var.chart_version
   namespace  = var.namespace
@@ -24,9 +24,4 @@ resource "helm_release" "redis" {
     name  = "usePassword"
     value = false
   }
-}
-
-data "helm_repository" "stable" {
-  name = "stable"
-  url  = "https://kubernetes-charts.storage.googleapis.com/"
 }

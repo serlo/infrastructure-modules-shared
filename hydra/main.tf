@@ -1,6 +1,6 @@
 resource "helm_release" "hydra_deployment" {
   name       = "hydra"
-  repository = data.helm_repository.ory.metadata[0].name
+  repository = "https://k8s.ory.sh/helm/charts"
   chart      = "hydra"
   version    = var.chart_version
   namespace  = var.namespace
@@ -9,11 +9,6 @@ resource "helm_release" "hydra_deployment" {
   values = [
     data.template_file.values_yaml_template.rendered
   ]
-}
-
-data "helm_repository" "ory" {
-  name = "ory"
-  url  = "https://k8s.ory.sh/helm/charts"
 }
 
 data "template_file" "values_yaml_template" {
