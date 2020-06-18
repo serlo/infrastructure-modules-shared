@@ -14,10 +14,10 @@ smtp:
 
 resources:
   limits:
-    cpu: 400m
+    cpu: 750m
     memory: 1600Mi
   requests:
-    cpu: 200m
+    cpu: 500m
     memory: 800Mi
 
 mongodb:
@@ -36,10 +36,10 @@ mongodb:
           secondary: 1
   resources:
     limits:
-      cpu: 750m
-      memory: 1500Mi
+      cpu: 200m
+      memory: 2000Mi
     requests:
-      cpu: 500m
+      cpu: 100m
       memory: 1000Mi
 
 ingress:
