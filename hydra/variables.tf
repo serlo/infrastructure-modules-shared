@@ -8,6 +8,11 @@ variable "url_login" {
   type        = string
 }
 
+variable "url_logout" {
+  description = "url of logout provider"
+  type        = string
+}
+
 variable "url_consent" {
   description = "url of consent provider"
   type        = string

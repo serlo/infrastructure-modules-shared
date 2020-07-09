@@ -32,6 +32,7 @@ hydra:
       self:
         issuer: "https://${host}"
       login: ${url_login}
+      logout: ${url_logout}
       consent: ${url_consent}
 
     secrets:

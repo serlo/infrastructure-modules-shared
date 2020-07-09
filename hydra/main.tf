@@ -21,6 +21,7 @@ data "template_file" "values_yaml_template" {
     dsn             = var.dsn
     salt            = random_password.hydra_salt.result
     url_login       = var.url_login
+    url_logout      = var.url_logout
     url_consent     = var.url_consent
     system_secret   = random_password.hydra_system_secret.result
   }
