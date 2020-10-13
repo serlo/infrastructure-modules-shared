@@ -7,7 +7,7 @@ resource "kubernetes_ingress" "ingress" {
     namespace = var.namespace
 
     annotations = {
-      "kubernetes.io/ingress.class" = "nginx"
+      "kubernetes.io/ingress.class"                 = "nginx"
       "nginx.ingress.kubernetes.io/proxy-body-size" = "2M"
     }
   }
