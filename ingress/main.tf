@@ -8,6 +8,7 @@ resource "kubernetes_ingress" "ingress" {
 
     annotations = {
       "kubernetes.io/ingress.class" = "nginx"
+      "nginx.ingress.kubernetes.io/proxy-body-size" = "2M"
     }
   }
 
