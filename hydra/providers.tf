@@ -1,9 +1,24 @@
 terraform {
   required_providers {
-    helm       = "~> 1.2"
-    kubernetes = "~> 1.0"
-    random     = "~> 2.0"
-    template   = "~> 2.0"
-    tls        = "~> 2.0"
+    helm = {
+      source  = "hashicorp/helm"
+      version = "~> 1.2"
+    }
+    kubernetes = {
+      source  = "hashicorp/kubernetes"
+      version = "~> 1.0"
+    }
+    random = {
+      source  = "hashicorp/random"
+      version = "~> 2.0"
+    }
+    template = {
+      source  = "hashicorp/template"
+      version = "~> 2.0"
+    }
+    tls = {
+      source  = "hashicorp/tls"
+      version = "~> 2.0"
+    }
   }
 }
