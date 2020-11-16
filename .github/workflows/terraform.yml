@@ -1,50 +1,46 @@
-name: "Terraform GitHub Actions"
+name: Terraform GitHub Actions
 on:
   - push
 jobs:
   format:
-    name: "fmt"
+    name: fmt
     runs-on: ubuntu-latest
     steps:
-      - name: "Checkout"
-        uses: actions/checkout@master
-      - name: "Terraform Format"
-        uses: hashicorp/terraform-github-actions@master
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
         with:
-          tf_actions_version: 0.12.18
-          tf_actions_subcommand: "fmt"
-          args: "-check -recursive"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          terraform_version: ~0.13.0
+      - name: Terraform Format
+        run: terraform fmt -check -recursive
   validate:
-    name: "validate"
+    name: validate
     runs-on: ubuntu-latest
     strategy:
       matrix:
         module:
           - hydra
+          - ingress
           - ingress-nginx
+          - matomo
           - mysql
+          - pact-broker
           - postgres
+          - redis
           - rocket-chat
           - tls-self-signed-cert
+          - varnish
     steps:
-      - name: "Checkout"
+      - name: Checkout
         uses: actions/checkout@master
-      - name: "Terraform Init"
-        uses: hashicorp/terraform-github-actions@master
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
         with:
-          tf_actions_version: 0.12.18
-          tf_actions_subcommand: "init"
-          tf_actions_working_dir: ${{ matrix.module }}
-          args: "-backend=false"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: "Terraform Validate"
-        uses: hashicorp/terraform-github-actions@master
-        with:
-          tf_actions_version: 0.12.18
-          tf_actions_subcommand: "validate"
-          tf_actions_working_dir: ${{ matrix.module }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          terraform_version: ~0.13.0
+      - name: Terraform Init
+        run: terraform init -backend=false
+        working-directory: ${{ matrix.module }}
+      - name: Terraform Validate
+        run: terraform validate
+        working-directory: ${{ matrix.module }}
