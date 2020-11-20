@@ -6,7 +6,7 @@ locals {
 
 resource "helm_release" "rocket-chat_deployment" {
   name       = "rocket-chat"
-  repository = "https://kubernetes-charts.storage.googleapis.com"
+  repository = "https://charts.helm.sh/stable"
   chart      = "rocketchat"
   version    = var.chart_version
   namespace  = var.namespace

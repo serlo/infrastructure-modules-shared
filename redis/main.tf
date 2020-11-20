@@ -1,6 +1,6 @@
 resource "helm_release" "redis" {
   name       = "redis"
-  repository = "https://kubernetes-charts.storage.googleapis.com"
+  repository = "https://charts.helm.sh/stable"
   chart      = "redis"
   version    = var.chart_version
   namespace  = var.namespace
