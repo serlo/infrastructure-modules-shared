@@ -36,11 +36,11 @@ mongodb:
           secondary: 1
   resources:
     limits:
-      cpu: 200m
+      cpu: 400m
       memory: 2000Mi
     requests:
-      cpu: 100m
-      memory: 1000Mi
+      cpu: 300m
+      memory: 1500Mi
 
 ingress:
   enabled: true
