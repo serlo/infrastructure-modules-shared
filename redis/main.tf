@@ -1,6 +1,6 @@
 resource "helm_release" "redis" {
   name       = "redis"
-  repository = "https://charts.helm.sh/stable"
+  repository = "https://charts.bitnami.com/bitnami"
   chart      = "redis"
   version    = var.chart_version
   namespace  = var.namespace
@@ -32,7 +32,7 @@ resource "helm_release" "redis" {
 
   set {
     name  = "master.resources.limits.memory"
-    value = "200Mi"
+    value = "400Mi"
   }
 
   set {
@@ -42,6 +42,6 @@ resource "helm_release" "redis" {
 
   set {
     name  = "master.resources.requests.memory"
-    value = "100Mi"
+    value = "200Mi"
   }
 }
