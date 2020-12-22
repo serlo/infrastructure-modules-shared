@@ -59,22 +59,22 @@ module "cert" {
   domain = var.host
 }
 
-variable name {
+variable "name" {
   description = "Name of the resource"
   type        = string
 }
 
-variable namespace {
+variable "namespace" {
   description = "K8s namespace to use"
   type        = string
 }
 
-variable host {
+variable "host" {
   description = "Fully qualified domain name"
   type        = string
 }
 
-variable backend {
+variable "backend" {
   description = "Backend defines the referenced service endpoint to which the traffic will be forwarded to"
   type = object({
     service_name = string
@@ -82,7 +82,7 @@ variable backend {
   })
 }
 
-variable enable_tls {
+variable "enable_tls" {
   description = "Whether to enable TLS"
   type        = bool
 }

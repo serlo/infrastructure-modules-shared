@@ -104,7 +104,7 @@ resource "kubernetes_secret" "mongodump" {
   }
 }
 
-data "template_file" run_sh {
+data "template_file" "run_sh" {
   template = file("${path.module}/run.sh")
 
   vars = {
