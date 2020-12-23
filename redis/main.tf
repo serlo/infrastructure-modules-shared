@@ -32,7 +32,7 @@ resource "helm_release" "redis" {
 
   set {
     name  = "master.resources.limits.memory"
-    value = "400Mi"
+    value = "600Mi"
   }
 
   set {
@@ -42,6 +42,6 @@ resource "helm_release" "redis" {
 
   set {
     name  = "master.resources.requests.memory"
-    value = "200Mi"
+    value = "400Mi"
   }
 }
