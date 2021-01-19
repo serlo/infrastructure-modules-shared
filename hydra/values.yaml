@@ -23,7 +23,7 @@ hydra:
     dsn: ${dsn}
     oidc:
       subject_identifiers:
-        enabled:
+        supported_types:
           - pairwise
         pairwise:
           salt: ${salt}
@@ -37,3 +37,12 @@ hydra:
 
     secrets:
       system: ${system_secret}
+
+deployment:
+  resources:
+    limits:
+      cpu: 20m
+      memory: 64Mi
+    requests:
+      cpu: 10m
+      memory: 32Mi
