@@ -1,0 +1,16 @@
+image:
+  tag: ${image_tag}
+architecture: replicaset
+auth:
+  rootPassword: ${mongodb_root_password}
+  username: ${mongodb_username}
+  password: ${mongodb_password}
+  database: ${mongodb_database}
+  replicaSetKey: ${mongodb_replica_set_key}
+resources:
+  limits:
+    cpu: 3000m
+    memory: 2000Mi
+  requests:
+    cpu: 2000m
+    memory: 1500Mi

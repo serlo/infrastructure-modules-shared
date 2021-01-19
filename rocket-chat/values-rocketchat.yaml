@@ -14,33 +14,14 @@ smtp:
 
 resources:
   limits:
-    cpu: 750m
-    memory: 1600Mi
+    cpu: 1000m
+    memory: 2000Mi
   requests:
-    cpu: 500m
-    memory: 800Mi
+    cpu: 750m
+    memory: 1500Mi
 
 mongodb:
-  mongodbDatabase: ${mongodb_database}
-  mongodbUsername: ${mongodb_username}
-  mongodbPassword: ${mongodb_password}
-  mongodbRootPassword: ${mongodb_root_password}
-  replicaSet:
-    enabled: true
-    replicas:
-      arbiter: 1
-      secondary: 1
-      pdb:
-        minAvailable:
-          arbiter: 1
-          secondary: 1
-  resources:
-    limits:
-      cpu: 400m
-      memory: 2000Mi
-    requests:
-      cpu: 300m
-      memory: 1500Mi
+  enabled: false
 
 ingress:
   enabled: true

@@ -27,13 +27,19 @@ variable "smtp_password" {
   type = string
 }
 
-variable "chart_version" {
-  type        = string
-  description = "Rocket Chat chart version to use"
+variable "chart_versions" {
+  description = "Chart version to use"
+  type = object({
+    rocketchat = string
+    mongodb    = string
+  })
 }
 
-variable "image_tag" {
-  type        = string
-  description = "Rocket Chat image tag to use"
+variable "image_tags" {
+  description = "Image tags to use"
+  type = object({
+    rocketchat = string
+    mongodb    = string
+  })
 }
 

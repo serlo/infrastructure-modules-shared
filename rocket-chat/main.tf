@@ -1,35 +1,33 @@
 locals {
-  bucket            = "${var.mongodump.bucket_prefix}-rocket-chat-mongodump"
-  mongodb_uri       = "mongodb://rocket-chat:${random_password.mongodb_password.result}@rocket-chat-mongodb-primary-0.rocket-chat-mongodb-headless,rocket-chat-mongodb-secondary-0.rocket-chat-mongodb-headless,rocket-chat-mongodb-arbiter-0.rocket-chat-mongodb-headless:27017/rocket-chat-db?replicaSet=rs0"
-  mongodb_oplog_uri = "mongodb://root:${random_password.mongodb_root_password.result}@rocket-chat-mongodb-primary-0.rocket-chat-mongodb-headless,rocket-chat-mongodb-secondary-0.rocket-chat-mongodb-headless,rocket-chat-mongodb-arbiter-0.rocket-chat-mongodb-headless:27017/local?replicaSet=rs0&authSource=admin"
+  bucket = "${var.mongodump.bucket_prefix}-rocket-chat-mongodump"
+
+  mongodb_uri       = "mongodb://rocket-chat:${random_password.mongodb_password.result}@rocket-chat-database-mongodb-0.rocket-chat-database-mongodb-headless,rocket-chat-database-mongodb-1.rocket-chat-database-mongodb-headless,rocket-chat-database-mongodb-arbiter-0.rocket-chat-database-mongodb-arbiter-headless:27017/rocket-chat-db?replicaSet=rs0"
+  mongodb_oplog_uri = "mongodb://root:${random_password.mongodb_root_password.result}@rocket-chat-database-mongodb-0.rocket-chat-database-mongodb-headless,rocket-chat-database-mongodb-1.rocket-chat-database-mongodb-headless,rocket-chat-database-mongodb-arbiter-0.rocket-chat-database-mongodb-arbiter-headless:27017/local?replicaSet=rs0&authSource=admin"
+
 }
 
 resource "helm_release" "rocket-chat_deployment" {
   name       = "rocket-chat"
   repository = "https://charts.helm.sh/stable"
   chart      = "rocketchat"
-  version    = var.chart_version
+  version    = var.chart_versions.rocketchat
   namespace  = var.namespace
 
   values = [
-    data.template_file.values_yaml_template.rendered
+    data.template_file.rocketchat_values.rendered
   ]
 }
 
-data "template_file" "values_yaml_template" {
-  template = file("${path.module}/values.yaml")
+data "template_file" "rocketchat_values" {
+  template = file("${path.module}/values-rocketchat.yaml")
 
   vars = {
-    image_tag    = var.image_tag
+    image_tag    = var.image_tags.rocketchat
     host         = var.host
     app_replicas = var.app_replicas
 
-    mongodb_uri           = local.mongodb_uri
-    mongodb_oplog_uri     = local.mongodb_oplog_uri
-    mongodb_database      = "rocket-chat-db"
-    mongodb_username      = "rocket-chat"
-    mongodb_password      = random_password.mongodb_password.result
-    mongodb_root_password = random_password.mongodb_root_password.result
+    mongodb_uri       = local.mongodb_uri
+    mongodb_oplog_uri = local.mongodb_oplog_uri
 
     smtp_host     = "smtp.eu.sparkpostmail.com"
     smtp_port     = 2525
@@ -37,6 +35,32 @@ data "template_file" "values_yaml_template" {
     smtp_password = var.smtp_password
 
     tls_secret_name = kubernetes_secret.rocket_chat_tls_certificate.metadata.0.name
+  }
+}
+
+resource "helm_release" "database" {
+  name       = "rocket-chat-database"
+  repository = "https://charts.bitnami.com/bitnami"
+  chart      = "mongodb"
+  version    = var.chart_versions.mongodb
+  namespace  = var.namespace
+
+  values = [
+    data.template_file.mongodb_values.rendered
+  ]
+}
+
+data "template_file" "mongodb_values" {
+  template = file("${path.module}/values-mongodb.yaml")
+
+  vars = {
+    image_tag = var.image_tags.mongodb
+
+    mongodb_database        = "rocket-chat-db"
+    mongodb_username        = "rocket-chat"
+    mongodb_password        = random_password.mongodb_password.result
+    mongodb_root_password   = random_password.mongodb_root_password.result
+    mongodb_replica_set_key = random_password.mongodb_replica_set_key.result
   }
 }
 
@@ -121,6 +145,11 @@ resource "random_password" "mongodb_password" {
 }
 
 resource "random_password" "mongodb_root_password" {
+  length  = 32
+  special = false
+}
+
+resource "random_password" "mongodb_replica_set_key" {
   length  = 32
   special = false
 }
