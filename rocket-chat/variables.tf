@@ -43,3 +43,6 @@ variable "image_tags" {
   })
 }
 
+output "host" {
+  value = var.host
+}
