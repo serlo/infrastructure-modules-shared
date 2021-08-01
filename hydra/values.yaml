@@ -36,7 +36,8 @@ hydra:
       consent: ${url_consent}
 
     secrets:
-      system: ${system_secret}
+      system:
+        - ${system_secret}
 
 deployment:
   resources:
