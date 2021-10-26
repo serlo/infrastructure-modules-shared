@@ -1,0 +1,116 @@
+image:
+  tag: ${image_tag}
+
+ingress:
+  public:
+    enabled: true
+    annotations:
+      kubernetes.io/ingress.class: nginx
+      kubernetes.io/tls-acme: "true"
+    hosts:
+      - host: ${host}
+        paths:
+          - path: /
+            pathType: Prefix
+    tls:
+      - hosts:
+          - ${host}
+        secretName: ${tls_secret_name}
+kratos:
+  autoMigrate: true
+
+  config:
+    dsn: ${dsn}
+
+    serve:
+      public:
+        base_url: https://${host}
+        cors:
+          # TODO: is this even doing anything? Since we proxy via frontend anyways
+          enabled: true
+          allowed_origins:
+            # TODO: only in staging
+            - http://127.0.0.1:3000/
+            # TODO: var
+            - https://*.serlo-staging.dev
+            # TODO: only in staging
+            - https://*.serlo.vercel.app
+          allowed_methods:
+            - POST
+            - GET
+            - PUT
+            - PATCH
+            - DELETE
+          allowed_headers:
+            - Authorization
+            - Cookie
+          exposed_headers:
+            - Content-Type
+            - Set-Cookie
+      admin:
+        base_url: http://kratos-admin.${namespace}:4445
+
+    selfservice:
+      default_browser_return_url: http://127.0.0.1:3000/
+      whitelisted_return_urls:
+        - http://127.0.0.1:3000
+
+      methods:
+        password:
+          enabled: true
+
+      flows:
+        error:
+          ui_url: http://127.0.0.1:3000/error
+
+        settings:
+          ui_url: http://127.0.0.1:3000/settings
+          privileged_session_max_age: 15m
+
+        recovery:
+          enabled: true
+          ui_url: http://127.0.0.1:3000/recovery
+
+        verification:
+          enabled: true
+          ui_url: http://127.0.0.1:3000/verify
+          after:
+            default_browser_return_url: http://127.0.0.1:3000/
+
+        logout:
+          after:
+            default_browser_return_url: http://127.0.0.1:3000/login
+
+        login:
+          ui_url: http://127.0.0.1:3000/login
+          lifespan: 10m
+
+        registration:
+          lifespan: 10m
+          ui_url: http://127.0.0.1:3000/registration
+          after:
+            password:
+              hooks:
+                - hook: session
+
+    secrets:
+      cookie:
+        - ${cookie_secret}
+
+    identity:
+      default_schema_url: https://serlo.org/auth/kratos-identity.schema.json
+
+    courier:
+      smtp:
+        connection_uri: smtp://SMTP_Injection:${smtp_password}@smtp.eu.sparkpostmail.com:2525
+        from_name: Serlo
+        from_address: no-reply@mail.serlo.org
+
+deployment:
+  resources:
+    limits:
+      cpu: 40m
+      memory: 128Mi
+    requests:
+      cpu: 20m
+      memory: 64Mi
