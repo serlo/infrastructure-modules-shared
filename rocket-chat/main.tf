@@ -155,7 +155,8 @@ resource "random_password" "mongodb_replica_set_key" {
 }
 
 resource "google_storage_bucket" "mongodump" {
-  name = local.bucket
+  name     = local.bucket
+  location = "EU"
 }
 
 resource "google_service_account" "mongodump" {
