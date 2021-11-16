@@ -4,8 +4,8 @@ variable "namespace" {
 }
 
 variable "host" {
-  type        = string
   description = "Public host of hydra"
+  type        = string
 }
 
 variable "dsn" {
@@ -15,17 +15,25 @@ variable "dsn" {
 
 variable "chart_version" {
   type        = string
-  description = "Hydra chart version to use"
+  description = "Kratos chart version to use"
 }
 
 variable "image_tag" {
+  description = "Kratos image tag to use"
   type        = string
-  description = "Hydra image tag to use"
 }
 
 variable "smtp_password" {
-  type        = string
   description = "SMTP password"
+  type        = string
+}
+
+variable "github" {
+  description = "GitHub OAuth Client"
+  type = object({
+    client_id     = string
+    client_secret = string
+  })
 }
 
 resource "helm_release" "kratos_deployment" {
@@ -41,21 +49,20 @@ resource "helm_release" "kratos_deployment" {
   ]
 }
 
+
 data "template_file" "values_yaml_template" {
   template = file("${path.module}/values.yaml")
 
   vars = {
-    host            = var.host
-    image_tag       = var.image_tag
-    tls_secret_name = kubernetes_secret.kratos_tls_certificate.metadata.0.name
-    dsn             = var.dsn
-    smtp_password   = var.smtp_password
-    namespace       = var.namespace
-    # salt            = random_password.kratos_salt.result
-    # url_login       = var.url_login
-    # url_logout      = var.url_logout
-    # url_consent     = var.url_consent
-    cookie_secret = random_password.kratos_cookie_secret.result
+    host                 = var.host
+    image_tag            = var.image_tag
+    tls_secret_name      = kubernetes_secret.kratos_tls_certificate.metadata.0.name
+    dsn                  = var.dsn
+    smtp_password        = var.smtp_password
+    namespace            = var.namespace
+    github_client_id     = var.github.client_id
+    github_client_secret = var.github.client_secret
+    cookie_secret        = random_password.kratos_cookie_secret.result
   }
 }
 
