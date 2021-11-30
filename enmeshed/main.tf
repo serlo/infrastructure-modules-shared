@@ -45,6 +45,8 @@ resource "kubernetes_deployment" "enmeshed_deployment" {
           volume_mount {
             name       = "config"
             mount_path = "/config.json"
+            sub_path = "config.json"
+            read_only = true
           }
         }
 
@@ -175,7 +177,7 @@ resource "kubernetes_deployment" "mongodb_deployment" {
           }
 
           port {
-            container_port = 3306
+            container_port = 27017
           }
 
           volume_mount {
