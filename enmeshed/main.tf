@@ -222,10 +222,35 @@ resource "kubernetes_ingress" "enmeshed_ingress" {
         }
       }
     }
-    # TODO
-    #    tls {
-    #      secret_name = "tls-secret"
-    #    }
+
+    tls {
+      secret_name = kubernetes_secret.enmeshed_tls_certificate.metadata.0.name
+    }
   }
 }
+
+resource "kubernetes_secret" "enmeshed_tls_certificate" {
+  type = "kubernetes.io/tls"
+
+  metadata {
+    name      = "enmeshed-tls-secret"
+    namespace = var.namespace
+  }
+
+  data = {
+    "tls.crt" = module.cert.crt
+    "tls.key" = module.cert.key
+  }
+}
+
+module "cert" {
+  source = "../tls-self-signed-cert"
+  domain = var.host
+}
+
+# TODO: maybe randomize password?
+#resource "random_password" "mongodb_root_password" {
+#  length  = 32
+#  special = false
+#}
 
