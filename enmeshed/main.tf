@@ -81,8 +81,8 @@ resource "kubernetes_service" "enmeshed" {
     type = "NodePort"
 
     port {
-      port        = 8080
-      target_port = 8080
+      port        = 80
+      target_port = 80
       protocol    = "TCP"
     }
   }
@@ -217,7 +217,7 @@ resource "kubernetes_ingress" "enmeshed_ingress" {
         path {
           backend {
             service_name = "enmeshed"
-            service_port = 8080
+            service_port = 80
           }
 
           path = "/"
