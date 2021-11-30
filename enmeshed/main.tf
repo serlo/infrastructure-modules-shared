@@ -45,8 +45,8 @@ resource "kubernetes_deployment" "enmeshed_deployment" {
           volume_mount {
             name       = "config"
             mount_path = "/config.json"
-            sub_path = "config.json"
-            read_only = true
+            sub_path   = "config.json"
+            read_only  = true
           }
         }
 
