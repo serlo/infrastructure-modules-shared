@@ -27,6 +27,7 @@ kratos:
         base_url: https://${host}
         cors:
           # TODO: is this even doing anything? Since we proxy via frontend anyways
+          # TODO: as suspected, this is not doing anything at all. Instead, we'd need to configure Ingress
           enabled: true
           allowed_origins:
             # TODO: only in staging
@@ -51,9 +52,9 @@ kratos:
         base_url: http://kratos-admin.${namespace}:4445
 
     selfservice:
-      default_browser_return_url: http://127.0.0.1:3000/
+      default_browser_return_url: http://frontend.serlo-staging.dev/
       whitelisted_return_urls:
-        - http://127.0.0.1:3000
+        - http://frontend.serlo-staging.dev
 
       methods:
         oidc:
@@ -73,33 +74,33 @@ kratos:
 
       flows:
         error:
-          ui_url: http://127.0.0.1:3000/error
+          ui_url: http://frontend.serlo-staging.dev/error
 
         settings:
-          ui_url: http://127.0.0.1:3000/settings
+          ui_url: http://frontend.serlo-staging.dev/settings
           privileged_session_max_age: 15m
 
         recovery:
           enabled: true
-          ui_url: http://127.0.0.1:3000/recovery
+          ui_url: http://frontend.serlo-staging.dev/recovery
 
         verification:
           enabled: true
-          ui_url: http://127.0.0.1:3000/verify
+          ui_url: http://frontend.serlo-staging.dev/verify
           after:
-            default_browser_return_url: http://127.0.0.1:3000/
+            default_browser_return_url: http://frontend.serlo-staging.dev/
 
         logout:
           after:
-            default_browser_return_url: http://127.0.0.1:3000/login
+            default_browser_return_url: http://frontend.serlo-staging.dev/login
 
         login:
-          ui_url: http://127.0.0.1:3000/login
+          ui_url: http://frontend.serlo-staging.dev/login
           lifespan: 10m
 
         registration:
           lifespan: 10m
-          ui_url: http://127.0.0.1:3000/registration
+          ui_url: http://frontend.serlo-staging.dev/registration
           after:
             password:
               hooks:
