@@ -63,9 +63,9 @@ resource "kubernetes_deployment" "enmeshed_deployment" {
 }
 
 
-resource "kubernetes_service" "enmeshed" {
+resource "kubernetes_service" "enmeshed_service" {
   metadata {
-    name      = "enmeshed"
+    name      = "enmeshed-service"
     namespace = var.namespace
 
     labels = {
@@ -196,58 +196,6 @@ resource "kubernetes_deployment" "mongodb_deployment" {
       }
     }
   }
-}
-
-
-resource "kubernetes_ingress" "enmeshed_ingress" {
-  metadata {
-    name      = "enmeshed-public"
-    namespace = var.namespace
-  }
-
-  spec {
-    backend {
-      service_name = "enmeshed"
-      service_port = 80
-    }
-
-    rule {
-      host = var.host
-      http {
-        path {
-          backend {
-            service_name = "enmeshed"
-            service_port = 80
-          }
-
-          path = "/"
-        }
-      }
-    }
-
-    tls {
-      secret_name = kubernetes_secret.enmeshed_tls_certificate.metadata.0.name
-    }
-  }
-}
-
-resource "kubernetes_secret" "enmeshed_tls_certificate" {
-  type = "kubernetes.io/tls"
-
-  metadata {
-    name      = "enmeshed-tls-secret"
-    namespace = var.namespace
-  }
-
-  data = {
-    "tls.crt" = module.cert.crt
-    "tls.key" = module.cert.key
-  }
-}
-
-module "cert" {
-  source = "../tls-self-signed-cert"
-  domain = var.host
 }
 
 # TODO: maybe randomize password?
