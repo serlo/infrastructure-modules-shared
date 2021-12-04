@@ -87,119 +87,43 @@ resource "kubernetes_service" "enmeshed_service" {
   }
 }
 
-resource "kubernetes_service" "mongodb" {
-  metadata {
-    name      = "mongodb"
-    namespace = var.namespace
+resource "helm_release" "database" {
+  name       = "enmeshed-database"
+  repository = "https://charts.bitnami.com/bitnami"
+  chart      = "mongodb"
+  version    = var.chart_versions.mongodb
+  namespace  = var.namespace
 
-    labels = {
-      app = "mongodb-app"
-    }
-  }
+  values = [
+    data.template_file.mongodb_values.rendered
+  ]
+}
 
-  spec {
-    selector = {
-      app = "mongodb-app"
-    }
+data "template_file" "mongodb_values" {
+  template = file("${path.module}/values-mongodb.yaml")
 
-    type = "NodePort"
+  vars = {
+    image_tag = var.image_tags.mongodb
 
-    port {
-      port        = 27017
-      target_port = 27017
-      protocol    = "TCP"
-    }
+    mongodb_database        = "enmeshed-db"
+    mongodb_username        = "enmeshed"
+    mongodb_password        = random_password.mongodb_password.result
+    mongodb_root_password   = random_password.mongodb_root_password.result
+    mongodb_replica_set_key = random_password.mongodb_replica_set_key.result
   }
 }
 
-resource "kubernetes_persistent_volume_claim" "mongodb-pv-claim" {
-  metadata {
-    name      = "mongodb-pv-claim"
-    namespace = var.namespace
-
-    labels = {
-      app = "mongodb-app"
-    }
-  }
-
-  spec {
-    access_modes = ["ReadWriteOnce"]
-
-    resources {
-      requests = {
-        storage = "5Gi"
-      }
-    }
-  }
+resource "random_password" "mongodb_password" {
+  length  = 32
+  special = false
 }
 
-resource "kubernetes_deployment" "mongodb_deployment" {
-  metadata {
-    name      = "mongodb-app"
-    namespace = var.namespace
-
-    labels = {
-      app = "mongodb-app"
-    }
-  }
-
-  spec {
-    replicas = "1"
-
-    selector {
-      match_labels = {
-        app = "mongodb-app"
-      }
-    }
-
-    template {
-      metadata {
-        labels = {
-          app  = "mongodb-app"
-          name = "mongodb"
-        }
-      }
-
-      spec {
-        container {
-          image = "mongo:${var.image_tags.mongodb}"
-          name  = "mongodb"
-
-          env {
-            name  = "MONGO_INITDB_ROOT_USERNAME"
-            value = "mongo"
-          }
-
-          env {
-            name  = "MONGO_INITDB_ROOT_PASSWORD"
-            value = "pass"
-          }
-
-          port {
-            container_port = 27017
-          }
-
-          volume_mount {
-            name       = "mongodb-persistent-storage"
-            mount_path = "/data/db"
-          }
-        }
-
-        volume {
-          name = "mongodb-persistent-storage"
-
-          persistent_volume_claim {
-            claim_name = kubernetes_persistent_volume_claim.mongodb-pv-claim.metadata[0].name
-          }
-        }
-      }
-    }
-  }
+resource "random_password" "mongodb_root_password" {
+  length  = 32
+  special = false
 }
 
-# TODO: maybe randomize password?
-#resource "random_password" "mongodb_root_password" {
-#  length  = 32
-#  special = false
-#}
-
+resource "random_password" "mongodb_replica_set_key" {
+  length  = 32
+  special = false
+}
