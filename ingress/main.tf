@@ -9,6 +9,7 @@ resource "kubernetes_ingress" "ingress" {
     annotations = {
       "kubernetes.io/ingress.class"                 = "nginx"
       "nginx.ingress.kubernetes.io/proxy-body-size" = "2M"
+      "nginx.ingress.kubernetes.io/enable-cors"     = tostring(var.enable_cors)
     }
   }
 
@@ -85,4 +86,11 @@ variable "backend" {
 variable "enable_tls" {
   description = "Whether to enable TLS"
   type        = bool
+}
+
+// TOOD: should probably be more granular, see https://kubernetes.github.io/ingress-nginx/user-guide/nginx-configuration/annotations/#enable-cors
+variable "enable_cors" {
+  description = "Whether to enable CORS"
+  type        = bool
+  default     = false
 }
