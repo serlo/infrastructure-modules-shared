@@ -31,17 +31,16 @@ resource "kubernetes_deployment" "enmeshed_deployment" {
             name  = "CUSTOM_CONFIG_LOCATION"
             value = "/config.json"
           }
-          # TODO
-          #          resources {
-          #            limits   = {
-          #              cpu    = "1000m"
-          #              memory = "2000Mi"
-          #            }
-          #            requests = {
-          #              cpu    = "750m"
-          #              memory = "1500Mi"
-          #            }
-          #          }
+          resources {
+            limits {
+              cpu    = "1000m"
+              memory = "2000Mi"
+            }
+            requests {
+              cpu    = "750m"
+              memory = "1500Mi"
+            }
+          }
           volume_mount {
             name       = "config"
             mount_path = "/config.json"

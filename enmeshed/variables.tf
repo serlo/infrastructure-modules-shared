@@ -16,6 +16,9 @@ variable "image_tags" {
   })
 }
 
-output "host" {
-  value = var.host
+variable "chart_versions" {
+  description = "Helm chart versions to use"
+  type = object({
+    mongodb    = string
+  })
 }
