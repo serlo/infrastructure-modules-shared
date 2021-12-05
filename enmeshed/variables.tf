@@ -22,3 +22,24 @@ variable "chart_versions" {
     mongodb    = string
   })
 }
+
+variable "platform_client_id" {
+  description = "Enmeshed platform client id"
+  type        = string
+
+}
+
+variable "platform_client_secret" {
+  description = "Enmeshed platform client secret"
+  type        = string
+}
+
+variable "api_url" {
+  description = "API URL"
+  type        = string
+}
+
+variable "api_key" {
+  description = "API key"
+  type        = string
+}

@@ -1,5 +1,5 @@
 locals {
-  mongodb_uri = "mongodb://mongo:pass@enmeshed-db:27017/enmeshed-db"
+  mongodb_uri = "mongodb://enmeshed:${random_password.mongodb_password.result}@enmeshed-db:27017/enmeshed-db"
 }
 
 resource "kubernetes_deployment" "enmeshed_deployment" {
@@ -53,7 +53,7 @@ resource "kubernetes_deployment" "enmeshed_deployment" {
           name = "config"
 
           secret {
-            secret_name = "config.json"
+            secret_name = "enmeshed-secret"
           }
         }
       }
@@ -61,6 +61,28 @@ resource "kubernetes_deployment" "enmeshed_deployment" {
   }
 }
 
+resource "kubernetes_secret" "enmeshed_secret" {
+  metadata {
+    name = "enmeshed-secret"
+    namespace = var.namespace
+  }
+
+  data = {
+    "config.json" = data.template_file.values_config_json_template.rendered
+  }
+}
+
+data "template_file" "values_config_json_template" {
+  template = file("${path.module}/values-config.yaml")
+
+  vars = {
+    platform_client_id     = var.platform_client_id
+    platform_client_secret = var.platform_client_secret
+    mongodb_uri            = local.mongodb_uri
+    api_url                = var.api_url
+    api_key                = var.api_key
+  }
+}
 
 resource "kubernetes_service" "enmeshed_service" {
   metadata {
