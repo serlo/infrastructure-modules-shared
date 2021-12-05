@@ -68,12 +68,12 @@ resource "kubernetes_secret" "enmeshed_secret" {
   }
 
   data = {
-    "config.json" = data.template_file.values_config_json_template.rendered
+    "config.json" = data.template_file.config_json_template.rendered
   }
 }
 
-data "template_file" "values_config_json_template" {
-  template = file("${path.module}/values-config.yaml")
+data "template_file" "config_json_template" {
+  template = file("${path.module}/config.json.tpl")
 
   vars = {
     platform_client_id     = var.platform_client_id
