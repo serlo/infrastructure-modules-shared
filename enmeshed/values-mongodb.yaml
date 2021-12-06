@@ -7,10 +7,3 @@ auth:
   password: ${mongodb_password}
   database: ${mongodb_database}
   replicaSetKey: ${mongodb_replica_set_key}
-resources:
-  limits:
-    cpu: 3000m
-    memory: 2000Mi
-  requests:
-    cpu: 2000m
-    memory: 1500Mi

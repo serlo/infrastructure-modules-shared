@@ -1,5 +1,8 @@
 locals {
-  mongodb_uri = "mongodb://enmeshed:${random_password.mongodb_password.result}@enmeshed-db:27017/enmeshed-db"
+  // FIXME: unauthorized
+  mongodb_uri = "mongodb://enmeshed:${random_password.mongodb_password.result}@enmeshed-database-mongodb-headless/enmeshed-db"
+  #  mongodb_uri = "mongodb://enmeshed:${random_password.mongodb_password.result}@enmeshed-database-mongodb-0.enmeshed-database-mongodb-arbiter-headless,enmeshed-database-mongodb-1.enmeshed-database-mongodb-arbiter-headless,enmeshed-database-mongodb-arbiter-0.enmeshed-database-mongodb-arbiter-headless/enmeshed-db?replicaSet=rs0",
+  #  mongodb_uri = "mongodb://enmeshed:${random_password.mongodb_password.result}@mongodb/enmeshed-db"
 }
 
 resource "kubernetes_deployment" "enmeshed_deployment" {
@@ -31,16 +34,17 @@ resource "kubernetes_deployment" "enmeshed_deployment" {
             name  = "CUSTOM_CONFIG_LOCATION"
             value = "/config.json"
           }
-          resources {
-            limits {
-              cpu    = "1000m"
-              memory = "2000Mi"
-            }
-            requests {
-              cpu    = "750m"
-              memory = "1500Mi"
-            }
-          }
+          # TODO: insufficient cpu in staging, but should be stablished at prod
+#          resources {
+#            limits {
+#              cpu    = "1000m"
+#              memory = "2000Mi"
+#            }
+#            requests {
+#              cpu    = "750m"
+#              memory = "1500Mi"
+#            }
+#          }
           volume_mount {
             name       = "config"
             mount_path = "/config.json"
