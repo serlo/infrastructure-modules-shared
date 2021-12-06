@@ -8,7 +8,7 @@ locals {
 
 resource "helm_release" "rocket-chat_deployment" {
   name       = "rocket-chat"
-  repository = "https://charts.helm.sh/stable"
+  repository = "https://rocketchat.github.io/helm-charts"
   chart      = "rocketchat"
   version    = var.chart_versions.rocketchat
   namespace  = var.namespace
