@@ -1,8 +1,5 @@
 locals {
-  // FIXME: unauthorized
-  mongodb_uri = "mongodb://enmeshed:${random_password.mongodb_password.result}@enmeshed-database-mongodb-headless/enmeshed-db"
-  #  mongodb_uri = "mongodb://enmeshed:${random_password.mongodb_password.result}@enmeshed-database-mongodb-0.enmeshed-database-mongodb-arbiter-headless,enmeshed-database-mongodb-1.enmeshed-database-mongodb-arbiter-headless,enmeshed-database-mongodb-arbiter-0.enmeshed-database-mongodb-arbiter-headless/enmeshed-db?replicaSet=rs0",
-  #  mongodb_uri = "mongodb://enmeshed:${random_password.mongodb_password.result}@mongodb/enmeshed-db"
+  mongodb_uri = "mongodb://root:${random_password.mongodb_root_password.result}@enmeshed-database-mongodb-headless:27017/?authSource=admin&readPreference=primary&ssl=false"
 }
 
 resource "kubernetes_deployment" "enmeshed_deployment" {
@@ -67,7 +64,7 @@ resource "kubernetes_deployment" "enmeshed_deployment" {
 
 resource "kubernetes_secret" "enmeshed_secret" {
   metadata {
-    name = "enmeshed-secret"
+    name      = "enmeshed-secret"
     namespace = var.namespace
   }
 
@@ -131,17 +128,11 @@ data "template_file" "mongodb_values" {
   vars = {
     image_tag = var.image_tags.mongodb
 
+    mongodb_username        = "enmeshed" // necessary for chart
     mongodb_database        = "enmeshed-db"
-    mongodb_username        = "enmeshed"
-    mongodb_password        = random_password.mongodb_password.result
     mongodb_root_password   = random_password.mongodb_root_password.result
     mongodb_replica_set_key = random_password.mongodb_replica_set_key.result
   }
-}
-
-resource "random_password" "mongodb_password" {
-  length  = 32
-  special = false
 }
 
 resource "random_password" "mongodb_root_password" {
