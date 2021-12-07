@@ -19,7 +19,7 @@ variable "image_tags" {
 variable "chart_versions" {
   description = "Helm chart versions to use"
   type = object({
-    mongodb    = string
+    mongodb = string
   })
 }
 
