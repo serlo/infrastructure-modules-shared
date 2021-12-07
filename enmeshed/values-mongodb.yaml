@@ -1,0 +1,8 @@
+image:
+  tag: ${image_tag}
+architecture: replicaset
+auth:
+  rootPassword: ${mongodb_root_password}
+  username: ${mongodb_username}
+  database: ${mongodb_database}
+  replicaSetKey: ${mongodb_replica_set_key}

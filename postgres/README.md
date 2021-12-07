@@ -1,3 +1,3 @@
-# MYSQL Terraform Module
+# Postgres Terraform Module
 
-Setup a local mysql database pod with a persistent volume.
+Setup a local postgres database pod with a persistent volume.
