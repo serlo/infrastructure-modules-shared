@@ -58,12 +58,12 @@ resource "helm_release" "keycloak" {
 
   set {
     name  = "auth.adminPassword"
-    value = random_password.keycloak_admin_password
+    value = random_password.keycloak_admin_password.result
   }
 
   set {
     name  = "auth.managementPassword"
-    value = random_password.wildfly_management_password
+    value = random_password.wildfly_management_password.result
   }
 }
 
