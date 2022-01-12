@@ -23,7 +23,7 @@ jobs:
           - hydra
           - ingress
           - ingress-nginx
-          - matomo
+          - keycloak
           - mysql
           - pact-broker
           - postgres
