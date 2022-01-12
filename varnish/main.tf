@@ -17,6 +17,11 @@ variable "image_pull_policy" {
   type        = string
 }
 
+variable "node_pool" {
+  type        = string
+  description = "Node pool to use"
+}
+
 variable "host" {
   description = "Host of the backend"
   type        = string
@@ -90,6 +95,10 @@ resource "kubernetes_deployment" "varnish" {
       }
 
       spec {
+        node_selector = {
+          "cloud.google.com/gke-nodepool" = var.node_pool
+        }
+
         container {
           image             = "eu.gcr.io/serlo-shared/varnish:${var.image_tag}"
           name              = local.name
@@ -178,4 +187,3 @@ data "template_file" "varnish" {
     host = var.host
   }
 }
-

@@ -1,6 +1,8 @@
 image:
   tag: ${image_tag}
 architecture: replicaset
+nodeSelector:
+  cloud.google.com/gke-nodepool: ${node_pool}
 auth:
   rootPassword: ${mongodb_root_password}
   username: ${mongodb_username}

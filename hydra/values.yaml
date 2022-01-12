@@ -41,6 +41,9 @@ hydra:
         - ${system_secret}
 
 deployment:
+  nodeSelector:
+    cloud.google.com/gke-nodepool: ${node_pool}
+
   resources:
     limits:
       cpu: 40m

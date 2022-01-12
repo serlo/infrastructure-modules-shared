@@ -3,6 +3,11 @@ variable "namespace" {
   type        = string
 }
 
+variable "node_pool" {
+  type        = string
+  description = "Node pool to use"
+}
+
 variable "app_replicas" {
   description = "Number of rocket chat replicas"
   type        = number

@@ -1,6 +1,9 @@
 image:
   tag: ${image_tag}
 
+nodeSelector:
+  cloud.google.com/gke-nodepool: ${node_pool}
+
 postgresql:
   enabled: false
 

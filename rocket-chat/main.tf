@@ -55,6 +55,7 @@ data "template_file" "mongodb_values" {
 
   vars = {
     image_tag = var.image_tags.mongodb
+    node_pool = var.node_pool
 
     mongodb_database        = "rocket-chat-db"
     mongodb_username        = "rocket-chat"
@@ -84,6 +85,10 @@ resource "kubernetes_cron_job" "mongodump" {
         template {
           metadata {}
           spec {
+            node_selector = {
+              "cloud.google.com/gke-nodepool" = var.node_pool
+            }
+
             container {
               name  = "rocket-chat-mongodump"
               image = var.mongodump.image

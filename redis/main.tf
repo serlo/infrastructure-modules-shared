@@ -11,6 +11,16 @@ resource "helm_release" "redis" {
   }
 
   set {
+    name  = "master.nodeSelector.cloud\\.google\\.com/gke-nodepool"
+    value = var.node_pool
+  }
+
+  set {
+    name  = "replica.nodeSelector.cloud\\.google\\.com/gke-nodepool"
+    value = var.node_pool
+  }
+
+  set {
     name  = "cluster.enabled"
     value = true
   }

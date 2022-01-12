@@ -12,3 +12,8 @@ variable "image_tag" {
   type        = string
   description = "Redis image tag to use"
 }
+
+variable "node_pool" {
+  type        = string
+  description = "Node pool to use"
+}

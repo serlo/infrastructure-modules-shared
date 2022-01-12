@@ -17,6 +17,7 @@ data "template_file" "values_yaml_template" {
   vars = {
     host            = var.host
     image_tag       = var.image_tag
+    node_pool       = var.node_pool
     tls_secret_name = kubernetes_secret.hydra_tls_certificate.metadata.0.name
     dsn             = var.dsn
     salt            = random_password.hydra_salt.result

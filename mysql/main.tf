@@ -10,6 +10,11 @@ variable "namespace" {
   description = "Namespace the database service should be created in"
 }
 
+variable "node_pool" {
+  type        = string
+  description = "Node pool to use"
+}
+
 resource "kubernetes_service" "mysql" {
   metadata {
     name      = "mysql"
@@ -96,6 +101,10 @@ resource "kubernetes_deployment" "mysql_deployment" {
       }
 
       spec {
+        node_selector = {
+          "cloud.google.com/gke-nodepool" = var.node_pool
+        }
+
         container {
           image = "mysql:${var.mysql_version}"
           name  = "mysql"

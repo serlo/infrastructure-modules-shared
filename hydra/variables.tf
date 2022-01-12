@@ -3,6 +3,11 @@ variable "namespace" {
   type        = string
 }
 
+variable "node_pool" {
+  type        = string
+  description = "Node pool to use"
+}
+
 variable "url_login" {
   description = "url of login provider"
   type        = string

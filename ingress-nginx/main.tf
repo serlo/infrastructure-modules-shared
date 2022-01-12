@@ -220,6 +220,10 @@ resource "kubernetes_deployment" "nginx_ingress_deployment" {
       }
 
       spec {
+        node_selector = {
+          "cloud.google.com/gke-nodepool" = var.node_pool
+        }
+
         service_account_name = "nginx-ingress-serviceaccount"
 
         container {

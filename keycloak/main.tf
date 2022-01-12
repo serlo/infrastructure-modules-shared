@@ -13,6 +13,11 @@ variable "image_tag" {
   description = "Keycloak image tag to use"
 }
 
+variable "node_pool" {
+  type        = string
+  description = "Node pool to use"
+}
+
 variable "host" {
   type        = string
   description = "Public host of hydra"
@@ -45,6 +50,7 @@ data "template_file" "values_yaml" {
   vars = {
     host      = var.host
     image_tag = var.image_tag
+    node_pool = var.node_pool
 
     database_host     = var.database.host
     database_user     = var.database.user

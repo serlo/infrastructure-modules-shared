@@ -23,6 +23,11 @@ variable "chart_versions" {
   })
 }
 
+variable "node_pool" {
+  type        = string
+  description = "Node pool to use"
+}
+
 variable "platform_client_id" {
   description = "Enmeshed platform client id"
   type        = string

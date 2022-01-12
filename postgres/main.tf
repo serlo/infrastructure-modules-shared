@@ -15,6 +15,11 @@ variable "node_port" {
   default     = 30024
 }
 
+variable "node_pool" {
+  type        = string
+  description = "Node pool to use"
+}
+
 resource "kubernetes_service" "postgres" {
   metadata {
     name      = "postgres"
@@ -101,6 +106,10 @@ resource "kubernetes_deployment" "postgres_deployment" {
       }
 
       spec {
+        node_selector = {
+          "cloud.google.com/gke-nodepool" = var.node_pool
+        }
+
         container {
           image = "postgres:${var.postgres_version}"
           name  = "postgres"

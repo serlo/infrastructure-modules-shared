@@ -23,6 +23,10 @@ resource "kubernetes_deployment" "enmeshed_deployment" {
         }
       }
       spec {
+        node_selector = {
+          "cloud.google.com/gke-nodepool" = var.node_pool
+        }
+
         container {
           image = "ghcr.io/nmshd/connector:${var.image_tags.enmeshed}"
           name  = "connector"
@@ -116,6 +120,7 @@ data "template_file" "mongodb_values" {
 
   vars = {
     image_tag = var.image_tags.mongodb
+    node_pool = var.node_pool
 
     mongodb_username        = "enmeshed" // necessary for chart
     mongodb_database        = "enmeshed-db"

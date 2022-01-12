@@ -13,6 +13,11 @@ variable "image_pull_policy" {
   type        = string
 }
 
+variable "node_pool" {
+  type        = string
+  description = "Node pool to use"
+}
+
 variable "database" {
   description = "Database connection information"
   type = object({
@@ -70,6 +75,10 @@ resource "kubernetes_deployment" "pact" {
       }
 
       spec {
+        node_selector = {
+          "cloud.google.com/gke-nodepool" = var.node_pool
+        }
+
         container {
           image             = "pactfoundation/pact-broker:${var.image_tag}"
           name              = "pact-broker"
