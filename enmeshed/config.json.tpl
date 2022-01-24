@@ -19,7 +19,7 @@
     "modules": {
         "sync": {
             "enabled": true,
-            "interval": 5
+            "interval": 6
         },
         "autoAcceptRelationshipCreationChanges": {
             "enabled": false,
@@ -37,7 +37,7 @@
             "headers": {
                 "X-API-KEY": "${api_key}"
             },
-            "publishInterval": 5
+            "publishInterval": 6
         }
     }
 }
