@@ -35,6 +35,14 @@ resource "kubernetes_deployment" "enmeshed_deployment" {
             name  = "CUSTOM_CONFIG_LOCATION"
             value = "/config.json"
           }
+
+          env {
+            # To update the container whenever the config changes
+            # See https://github.com/serlo/infrastructure-modules-shared/issues/21
+            name  = "CONFIG_CHECKSUM"
+            value = sha256(data.template_file.config_json_template.rendered)
+          }
+
           volume_mount {
             name       = "config"
             mount_path = "/config.json"
