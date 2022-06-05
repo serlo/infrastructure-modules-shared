@@ -1,5 +1,11 @@
 locals {
   name = "varnish"
+  default = templatefile(
+    "${path.module}/default.vcl",
+    {
+      host = var.host
+    }
+  )
 }
 
 variable "namespace" {
@@ -116,7 +122,7 @@ resource "kubernetes_deployment" "varnish" {
           # This ensures that changes to the config file trigger a redeployment
           env {
             name  = "CONFIG_CHECKSUM"
-            value = sha256(data.template_file.varnish.rendered)
+            value = sha256(local.default)
           }
 
           readiness_probe {
@@ -133,12 +139,12 @@ resource "kubernetes_deployment" "varnish" {
           }
 
           resources {
-            limits {
+            limits = {
               cpu    = "75m"
               memory = "750Mi"
             }
 
-            requests {
+            requests = {
               cpu    = "50m"
               memory = "500Mi"
             }
@@ -176,14 +182,6 @@ resource "kubernetes_config_map" "varnish" {
   }
 
   data = {
-    "default.vcl" = data.template_file.varnish.rendered
-  }
-}
-
-data "template_file" "varnish" {
-  template = file("${path.module}/default.vcl")
-
-  vars = {
-    host = var.host
+    "default.vcl" = local.default
   }
 }
