@@ -7,25 +7,22 @@ resource "helm_release" "hydra_deployment" {
   timeout    = 100
 
   values = [
-    data.template_file.values_yaml_template.rendered
+    templatefile(
+      "${path.module}/values.yaml",
+      {
+        host            = var.host
+        image_tag       = var.image_tag
+        node_pool       = var.node_pool
+        tls_secret_name = kubernetes_secret.hydra_tls_certificate.metadata.0.name
+        dsn             = var.dsn
+        salt            = random_password.hydra_salt.result
+        url_login       = var.url_login
+        url_logout      = var.url_logout
+        url_consent     = var.url_consent
+        system_secret   = random_password.hydra_system_secret.result
+      }
+    )
   ]
-}
-
-data "template_file" "values_yaml_template" {
-  template = file("${path.module}/values.yaml")
-
-  vars = {
-    host            = var.host
-    image_tag       = var.image_tag
-    node_pool       = var.node_pool
-    tls_secret_name = kubernetes_secret.hydra_tls_certificate.metadata.0.name
-    dsn             = var.dsn
-    salt            = random_password.hydra_salt.result
-    url_login       = var.url_login
-    url_logout      = var.url_logout
-    url_consent     = var.url_consent
-    system_secret   = random_password.hydra_system_secret.result
-  }
 }
 
 resource "random_password" "hydra_system_secret" {

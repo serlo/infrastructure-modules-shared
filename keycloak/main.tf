@@ -40,28 +40,27 @@ resource "helm_release" "keycloak" {
   namespace  = var.namespace
 
   values = [
-    data.template_file.values_yaml.rendered
+    templatefile(
+      "${path.module}/values.yaml",
+      {
+        host      = var.host
+        image_tag = var.image_tag
+        node_pool = var.node_pool
+
+        database_host     = var.database.host
+        database_user     = var.database.user
+        database_password = var.database.password
+        database_name     = var.database.database
+
+        admin_password      = random_password.keycloak_admin_password.result
+        management_password = random_password.wildfly_management_password.result
+        tls_secret_name     = kubernetes_secret.keycloak_tls_certificate.metadata.0.name
+      }
+    )
   ]
 }
 
-data "template_file" "values_yaml" {
-  template = file("${path.module}/values.yaml")
 
-  vars = {
-    host      = var.host
-    image_tag = var.image_tag
-    node_pool = var.node_pool
-
-    database_host     = var.database.host
-    database_user     = var.database.user
-    database_password = var.database.password
-    database_name     = var.database.database
-
-    admin_password      = random_password.keycloak_admin_password.result
-    management_password = random_password.wildfly_management_password.result
-    tls_secret_name     = kubernetes_secret.keycloak_tls_certificate.metadata.0.name
-  }
-}
 
 resource "kubernetes_secret" "keycloak_tls_certificate" {
   type = "kubernetes.io/tls"

@@ -14,28 +14,25 @@ resource "helm_release" "rocket-chat_deployment" {
   namespace  = var.namespace
 
   values = [
-    data.template_file.rocketchat_values.rendered
+    templatefile(
+      "${path.module}/values-rocketchat.yaml",
+      {
+        image_tag    = var.image_tags.rocketchat
+        host         = var.host
+        app_replicas = var.app_replicas
+
+        mongodb_uri       = local.mongodb_uri
+        mongodb_oplog_uri = local.mongodb_oplog_uri
+
+        smtp_host     = "smtp.eu.sparkpostmail.com"
+        smtp_port     = 2525
+        smtp_username = "SMTP_Injection"
+        smtp_password = var.smtp_password
+
+        tls_secret_name = kubernetes_secret.rocket_chat_tls_certificate.metadata.0.name
+      }
+    )
   ]
-}
-
-data "template_file" "rocketchat_values" {
-  template = file("${path.module}/values-rocketchat.yaml")
-
-  vars = {
-    image_tag    = var.image_tags.rocketchat
-    host         = var.host
-    app_replicas = var.app_replicas
-
-    mongodb_uri       = local.mongodb_uri
-    mongodb_oplog_uri = local.mongodb_oplog_uri
-
-    smtp_host     = "smtp.eu.sparkpostmail.com"
-    smtp_port     = 2525
-    smtp_username = "SMTP_Injection"
-    smtp_password = var.smtp_password
-
-    tls_secret_name = kubernetes_secret.rocket_chat_tls_certificate.metadata.0.name
-  }
 }
 
 resource "helm_release" "database" {
@@ -46,23 +43,20 @@ resource "helm_release" "database" {
   namespace  = var.namespace
 
   values = [
-    data.template_file.mongodb_values.rendered
+    templatefile(
+      "${path.module}/values-mongodb.yaml",
+      {
+        image_tag = var.image_tags.mongodb
+        node_pool = var.node_pool
+
+        mongodb_database        = "rocket-chat-db"
+        mongodb_username        = "rocket-chat"
+        mongodb_password        = random_password.mongodb_password.result
+        mongodb_root_password   = random_password.mongodb_root_password.result
+        mongodb_replica_set_key = random_password.mongodb_replica_set_key.result
+      }
+    )
   ]
-}
-
-data "template_file" "mongodb_values" {
-  template = file("${path.module}/values-mongodb.yaml")
-
-  vars = {
-    image_tag = var.image_tags.mongodb
-    node_pool = var.node_pool
-
-    mongodb_database        = "rocket-chat-db"
-    mongodb_username        = "rocket-chat"
-    mongodb_password        = random_password.mongodb_password.result
-    mongodb_root_password   = random_password.mongodb_root_password.result
-    mongodb_replica_set_key = random_password.mongodb_replica_set_key.result
-  }
 }
 
 resource "kubernetes_cron_job" "mongodump" {
@@ -129,18 +123,15 @@ resource "kubernetes_secret" "mongodump" {
   }
 
   data = {
-    "run.sh" = data.template_file.run_sh.rendered
-  }
-}
+    "run.sh" = templatefile(
+      "${path.module}/run.sh",
+      {
+        database_uri = local.mongodb_uri
 
-data "template_file" "run_sh" {
-  template = file("${path.module}/run.sh")
-
-  vars = {
-    database_uri = local.mongodb_uri
-
-    bucket_url                 = "gs://${local.bucket}"
-    bucket_service_account_key = base64decode(google_service_account_key.mongodump.private_key)
+        bucket_url                 = "gs://${local.bucket}"
+        bucket_service_account_key = base64decode(google_service_account_key.mongodump.private_key)
+      }
+    )
   }
 }
 
