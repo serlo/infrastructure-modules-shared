@@ -159,7 +159,7 @@ resource "kubernetes_role_binding" "nginx_ingress_role_nisa_binding" {
 
   subject {
     kind      = "ServiceAccount"
-    name      = "nginx-ingress-serviceaccount"
+    name      = kubernetes_service_account.nginx_ingress_serviceaccount.metadata[0].name
     namespace = var.namespace
   }
 
@@ -177,7 +177,7 @@ resource "kubernetes_cluster_role_binding" "nginx_ingress_clusterrole_nisa_bindi
 
   subject {
     kind      = "ServiceAccount"
-    name      = "nginx-ingress-serviceaccount"
+    name      = kubernetes_service_account.nginx_ingress_serviceaccount.metadata[0].name
     namespace = var.namespace
   }
 
@@ -224,19 +224,12 @@ resource "kubernetes_deployment" "nginx_ingress_deployment" {
           "cloud.google.com/gke-nodepool" = var.node_pool
         }
 
-        service_account_name = "nginx-ingress-serviceaccount"
+        service_account_name = kubernetes_service_account.nginx_ingress_serviceaccount.metadata[0].name
 
         container {
           name  = "nginx-ingress-container"
           image = var.nginx_image
           args  = ["/nginx-ingress-controller", "--configmap=$(POD_NAMESPACE)/nginx-configuration", "--tcp-services-configmap=$(POD_NAMESPACE)/tcp-services", "--udp-services-configmap=$(POD_NAMESPACE)/udp-services", "--publish-service=$(POD_NAMESPACE)/ingress-nginx", "--annotations-prefix=nginx.ingress.kubernetes.io", "--default-ssl-certificate=${var.namespace}/ingress-nginx-tls-secret"]
-
-          //see https://github.com/terraform-providers/terraform-provider-kubernetes/issues/38
-          volume_mount {
-            mount_path = "/var/run/secrets/kubernetes.io/serviceaccount"
-            name       = kubernetes_service_account.nginx_ingress_serviceaccount.default_secret_name
-            read_only  = true
-          }
 
           port {
             name           = "http"
@@ -298,15 +291,6 @@ resource "kubernetes_deployment" "nginx_ingress_deployment" {
           security_context {
             run_as_user = 33
             //allow_privilege_escalation = true
-          }
-        }
-
-        //see https://github.com/terraform-providers/terraform-provider-kubernetes/issues/38
-        volume {
-          name = kubernetes_service_account.nginx_ingress_serviceaccount.default_secret_name
-
-          secret {
-            secret_name = kubernetes_service_account.nginx_ingress_serviceaccount.default_secret_name
           }
         }
       }
