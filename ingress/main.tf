@@ -1,29 +1,35 @@
 # Creates an Ingress (w/ optional TLS support) to expose services
 #
 # see https://www.terraform.io/docs/providers/kubernetes/r/ingress.html
-resource "kubernetes_ingress" "ingress" {
+resource "kubernetes_ingress_v1" "ingress" {
   metadata {
     name      = var.name
     namespace = var.namespace
 
     annotations = {
-      "kubernetes.io/ingress.class"                 = "nginx"
       "nginx.ingress.kubernetes.io/proxy-body-size" = "2M"
       "nginx.ingress.kubernetes.io/enable-cors"     = tostring(var.enable_cors)
     }
   }
 
   spec {
+    ingress_class_name = "nginx"
+
     rule {
       host = var.host
 
       http {
         path {
-          path = "/"
+          path      = "/"
+          path_type = "Prefix"
 
           backend {
-            service_name = var.backend.service_name
-            service_port = var.backend.service_port
+            service {
+              name = var.backend.service_name
+              port {
+                number = var.backend.service_port
+              }
+            }
           }
         }
       }
