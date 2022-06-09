@@ -47,8 +47,6 @@ kratos:
           exposed_headers:
             - Content-Type
             - Set-Cookie
-      admin:
-        base_url: http://kratos-admin.${namespace}:4445
 
     selfservice:
       default_browser_return_url: http://127.0.0.1:3000/
