@@ -34,7 +34,7 @@ resource "helm_release" "kratos_deployment" {
   chart      = "kratos"
   version    = var.chart_version
   namespace  = var.namespace
-  timeout    = 100
+  timeout    = 1200
 
   values = [
     templatefile(
