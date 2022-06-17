@@ -22,14 +22,3 @@ resources:
 
 mongodb:
   enabled: false
-
-ingress:
-  enabled: true
-  className: nginx
-  annotations:
-    nginx.ingress.kubernetes.io/proxy-body-size: 5M
-  path: "/"
-  tls:
-    - hosts:
-        - ${host}
-      secretName: ${tls_secret_name}

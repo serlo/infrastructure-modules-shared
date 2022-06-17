@@ -28,8 +28,6 @@ resource "helm_release" "rocket-chat_deployment" {
         smtp_port     = 2525
         smtp_username = "SMTP_Injection"
         smtp_password = var.smtp_password
-
-        tls_secret_name = kubernetes_secret.rocket_chat_tls_certificate.metadata.0.name
       }
     )
   ]
@@ -168,23 +166,4 @@ resource "google_storage_bucket_iam_member" "mongodump" {
   bucket = google_storage_bucket.mongodump.name
   role   = "roles/storage.objectAdmin"
   member = "serviceAccount:${google_service_account.mongodump.email}"
-}
-
-resource "kubernetes_secret" "rocket_chat_tls_certificate" {
-  type = "kubernetes.io/tls"
-
-  metadata {
-    name      = "rocket-chat-tls"
-    namespace = var.namespace
-  }
-
-  data = {
-    "tls.crt" = module.cert.crt
-    "tls.key" = module.cert.key
-  }
-}
-
-module "cert" {
-  source = "../tls-self-signed-cert"
-  domain = var.host
 }
