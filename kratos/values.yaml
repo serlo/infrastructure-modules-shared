@@ -36,6 +36,8 @@ kratos:
             - https://*.serlo-staging.dev
             # TODO: only in staging
             - https://*.serlo.vercel.app
+            # TODO: delete after tests
+            - https://frontend-gf5944wgn-serlo.vercel.app
           allowed_methods:
             - POST
             - GET
