@@ -80,7 +80,7 @@ output "service_uri" {
 }
 
 output "admin_uri" {
-  value = "http://kratos-admin.${var.namespace}:4445"
+  value = "http://kratos-admin.${var.namespace}"
 }
 
 module "cert" {
