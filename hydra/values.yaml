@@ -16,6 +16,20 @@ ingress:
       - hosts:
           - ${host}
         secretName: ${tls_secret_name}
+  admin:
+    enabled: true
+    className: nginx
+    annotations:
+      kubernetes.io/tls-acme: "true"
+    hosts:
+      - host: admin-${host}
+        paths:
+          - path: /
+            pathType: Prefix
+    tls:
+      - hosts:
+          - admin-${host}
+        secretName: ${admin_tls_secret_name}
 
 hydra:
   autoMigrate: true
