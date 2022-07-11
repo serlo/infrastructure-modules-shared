@@ -31,7 +31,7 @@ kratos:
           enabled: true
           allowed_origins:
             # TODO: only in staging
-            - http://127.0.0.1:3000/
+            - http://localhost:3000/
             # TODO: var
             - https://*.serlo-staging.dev
             # TODO: only in staging
