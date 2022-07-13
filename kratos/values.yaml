@@ -47,12 +47,14 @@ kratos:
           allowed_headers:
             - Authorization
             - Cookie
+            - X-CSRF-Token
           exposed_headers:
             - Content-Type
             - Set-Cookie
+            - X-CSRF-Token
 
     selfservice:
-      default_browser_return_url: http://127.0.0.1:3000/
+      default_browser_return_url: http://localhost:3000/
 
       methods:
         password:
@@ -60,33 +62,33 @@ kratos:
 
       flows:
         error:
-          ui_url: http://127.0.0.1:3000/error
+          ui_url: http://localhost:3000/error
 
         settings:
-          ui_url: http://127.0.0.1:3000/settings
+          ui_url: http://localhost:3000/settings
           privileged_session_max_age: 15m
 
         recovery:
           enabled: true
-          ui_url: http://127.0.0.1:3000/recovery
+          ui_url: http://localhost:3000/recovery
 
         verification:
           enabled: true
-          ui_url: http://127.0.0.1:3000/verify
+          ui_url: http://localhost:3000/verify
           after:
-            default_browser_return_url: http://127.0.0.1:3000/
+            default_browser_return_url: http://localhost:3000/
 
         logout:
           after:
-            default_browser_return_url: http://127.0.0.1:3000/login
+            default_browser_return_url: http://localhost:3000/login
 
         login:
-          ui_url: http://127.0.0.1:3000/login
+          ui_url: http://localhost:3000/login
           lifespan: 10m
 
         registration:
           lifespan: 10m
-          ui_url: http://127.0.0.1:3000/registration
+          ui_url: http://localhost:3000/registration
           after:
             password:
               hooks:
