@@ -8,6 +8,11 @@ variable "host" {
   description = "Public host of kratos"
 }
 
+variable "domain" {
+  type        = string
+  description = "Domain of the environment"
+}
+
 variable "dsn" {
   description = "DSN string for Postgres database"
   type        = string
@@ -46,11 +51,8 @@ resource "helm_release" "kratos_deployment" {
         dsn             = var.dsn
         smtp_password   = var.smtp_password
         namespace       = var.namespace
-        # salt            = random_password.kratos_salt.result
-        # url_login       = var.url_login
-        # url_logout      = var.url_logout
-        # url_consent     = var.url_consent
-        cookie_secret = random_password.kratos_cookie_secret.result
+        domain          = var.domain
+        cookie_secret   = random_password.kratos_cookie_secret.result
       }
     )
   ]

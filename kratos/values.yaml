@@ -27,7 +27,6 @@ kratos:
       public:
         base_url: https://${host}
         cors:
-          # TODO: is this even doing anything? Since we proxy via frontend anyways
           enabled: true
           allowed_origins:
             # TODO: only in staging
@@ -90,9 +89,12 @@ kratos:
           lifespan: 10m
           ui_url: http://localhost:3000/registration
           after:
-            password:
-              hooks:
-                - hook: session
+            hooks:
+              - hook: web_hook
+                config:
+                  url: https://api.${domain}/kratos/register
+                  method: POST
+                  body: https://${domain}/auth/after-registration-hook-payload.jsonnet
 
     secrets:
       cookie:
@@ -101,8 +103,8 @@ kratos:
     identity:
       default_schema_id: default
       schemas:
-            - id: default
-              url: https://serlo.org/auth/kratos-identity.schema.json
+        - id: default
+          url: https://${domain}/auth/kratos-identity.schema.json
 
     courier:
       smtp:
