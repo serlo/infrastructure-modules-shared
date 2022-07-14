@@ -61,33 +61,33 @@ kratos:
 
       flows:
         error:
-          ui_url: http://localhost:3000/error
+          ui_url: http://localhost:3000/auth/error
 
         settings:
-          ui_url: http://localhost:3000/settings
+          ui_url: http://localhost:3000/auth/settings
           privileged_session_max_age: 15m
 
         recovery:
           enabled: true
-          ui_url: http://localhost:3000/recovery
+          ui_url: http://localhost:3000/auth/recovery
 
         verification:
           enabled: true
-          ui_url: http://localhost:3000/verify
+          ui_url: http://localhost:3000/auth/verify
           after:
             default_browser_return_url: http://localhost:3000/
 
         logout:
           after:
-            default_browser_return_url: http://localhost:3000/login
+            default_browser_return_url: http://localhost:3000/auth/login
 
         login:
-          ui_url: http://localhost:3000/login
+          ui_url: http://localhost:3000/auth/login
           lifespan: 10m
 
         registration:
           lifespan: 10m
-          ui_url: http://localhost:3000/registration
+          ui_url: http://localhost:3000/auth/registration
           after:
             hooks:
               - hook: web_hook
