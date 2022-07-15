@@ -58,6 +58,8 @@ kratos:
       methods:
         password:
           enabled: true
+        link:
+          enabled: true
 
       flows:
         error:
