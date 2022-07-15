@@ -60,8 +60,7 @@ kratos:
           enabled: true
         link:
           enabled: true
-          config:
-            base_url: http://localhost:3000
+
       flows:
         error:
           ui_url: http://localhost:3000/auth/error
