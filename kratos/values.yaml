@@ -73,9 +73,9 @@ kratos:
 
         verification:
           enabled: true
-          ui_url: http://localhost:3000/auth/verify
+          ui_url: http://localhost:3000/auth/verification
           after:
-            default_browser_return_url: http://localhost:3000/
+            default_browser_return_url: http://localhost:3000/auth/login
 
         logout:
           after:
