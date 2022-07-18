@@ -33,10 +33,6 @@ variable "smtp_password" {
   description = "SMTP password"
 }
 
-output "host" {
-  value = var.host
-}
-
 resource "helm_release" "kratos_deployment" {
   name       = "kratos"
   repository = "https://k8s.ory.sh/helm/charts"
