@@ -35,8 +35,6 @@ kratos:
             - https://*.serlo-staging.dev
             # TODO: only in staging
             - https://*.serlo.vercel.app
-            # TODO: delete after tests
-            - https://frontend-gf5944wgn-serlo.vercel.app
           allowed_methods:
             - POST
             - GET
@@ -99,6 +97,12 @@ kratos:
                   url: https://api.${domain}/kratos/register
                   method: POST
                   body: https://${domain}/auth/after-registration-hook-payload.jsonnet
+                  auth:
+                    type: api_key
+                    config:
+                      name: x-kratos-key
+                      value: ${kratos_secret}
+                      in: header
 
     secrets:
       cookie:

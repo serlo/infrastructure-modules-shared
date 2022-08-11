@@ -53,6 +53,7 @@ resource "helm_release" "kratos_deployment" {
         namespace       = var.namespace
         domain          = var.domain
         cookie_secret   = random_password.kratos_cookie_secret.result
+        kratos_secret   = random_password.secret.result
       }
     )
   ]
@@ -88,4 +89,15 @@ output "admin_uri" {
 module "cert" {
   source = "../tls-self-signed-cert"
   domain = var.host
+}
+
+resource "random_password" "secret" {
+  length  = 32
+  special = false
+}
+
+output "secret" {
+  description = "Shared secret between api and kratos"
+  value       = random_password.secret.result
+  sensitive   = true
 }
