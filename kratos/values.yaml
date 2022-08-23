@@ -51,7 +51,7 @@ kratos:
             - X-CSRF-Token
 
     selfservice:
-      default_browser_return_url: http://localhost:3000/
+      default_browser_return_url: https://kratos-vercel.serlo-staging.dev/
 
       methods:
         password:
@@ -59,37 +59,37 @@ kratos:
         link:
           enabled: true
           config:
-            base_url: http://localhost:3000/api/.ory/
+            base_url: https://kratos-vercel.serlo-staging.dev/api/.ory/
 
       flows:
         error:
-          ui_url: http://localhost:3000/auth/error
+          ui_url: https://kratos-vercel.serlo-staging.dev/auth/error
 
         settings:
-          ui_url: http://localhost:3000/auth/settings
+          ui_url: https://kratos-vercel.serlo-staging.dev/auth/settings
           privileged_session_max_age: 15m
 
         recovery:
           enabled: true
-          ui_url: http://localhost:3000/auth/recovery
+          ui_url: https://kratos-vercel.serlo-staging.dev/auth/recovery
 
         verification:
           enabled: true
-          ui_url: http://localhost:3000/auth/verification
+          ui_url: https://kratos-vercel.serlo-staging.dev/auth/verification
           after:
-            default_browser_return_url: http://localhost:3000/auth/login
+            default_browser_return_url: https://kratos-vercel.serlo-staging.dev/auth/login
 
         logout:
           after:
-            default_browser_return_url: http://localhost:3000/auth/login
+            default_browser_return_url: https://kratos-vercel.serlo-staging.dev/auth/login
 
         login:
-          ui_url: http://localhost:3000/auth/login
+          ui_url: https://kratos-vercel.serlo-staging.dev/auth/login
           lifespan: 10m
 
         registration:
           lifespan: 10m
-          ui_url: http://localhost:3000/auth/registration
+          ui_url: https://kratos-vercel.serlo-staging.dev/auth/registration
           after:
             hooks:
               - hook: web_hook
@@ -119,7 +119,35 @@ kratos:
         connection_uri: smtp://SMTP_Injection:${smtp_password}@smtp.eu.sparkpostmail.com:2525
         from_name: Serlo
         from_address: no-reply@mail.serlo.org
-
+      # TODO: just for testing purpose, remove hard code
+      template_override_path: https://kratos-vercel.${domain}/api/.ory/mail-templates
+      templates:
+        verification:
+          valid:
+            email:
+              subject: http://kratos-vercel.${domain}/api/.ory/mail-templates/verification/valid/email.subject.gotmpl
+              body:
+                html: http://kratos-vercel.${domain}/api/.ory/mail-templates/verification/valid/email.body.gotmpl
+                plaintext: http://kratos-vercel.${domain}/api/.ory/mail-templates/verification/valid/email.body.plaintext.gotmpl
+          invalid:
+            email:
+              subject: http://kratos-vercel.${domain}/api/.ory/mail-templates/verification/invalid/email.subject.gotmpl
+              body:
+                html: http://kratos-vercel.${domain}/api/.ory/mail-templates/verification/invalid/email.body.gotmpl
+                plaintext: http://kratos-vercel.${domain}/api/.ory/mail-templates/verification/invalid/email.body.plaintext.gotmpl
+        recovery:
+          valid:
+            email:
+              subject: http://kratos-vercel.${domain}/api/.ory/mail-templates/recovery/valid/email.subject.gotmpl
+              body:
+                html: http://kratos-vercel.${domain}/api/.ory/mail-templates/recovery/valid/email.body.gotmpl
+                plaintext: http://kratos-vercel.${domain}/api/.ory/mail-templates/recovery/valid/email.body.plaintext.gotmpl
+          invalid:
+            email:
+              subject: http://kratos-vercel.${domain}/api/.ory/mail-templates/recovery/invalid/email.subject.gotmpl
+              body:
+                html: http://kratos-vercel.${domain}/api/.ory/mail-templates/recovery/invalid/email.body.gotmpl
+                plaintext: http://kratos-vercel.${domain}/api/.ory/mail-templates/recovery/invalid/email.body.plaintext.gotmpl
 deployment:
   resources:
     limits:
