@@ -10,17 +10,16 @@ resource "helm_release" "hydra_deployment" {
     templatefile(
       "${path.module}/values.yaml",
       {
-        host                  = var.host
-        image_tag             = var.image_tag
-        node_pool             = var.node_pool
-        tls_secret_name       = kubernetes_secret.hydra_tls_certificate.metadata.0.name
-        admin_tls_secret_name = kubernetes_secret.admin_hydra_tls_certificate.metadata.0.name
-        dsn                   = var.dsn
-        salt                  = random_password.hydra_salt.result
-        url_login             = var.url_login
-        url_logout            = var.url_logout
-        url_consent           = var.url_consent
-        system_secret         = random_password.hydra_system_secret.result
+        host            = var.host
+        image_tag       = var.image_tag
+        node_pool       = var.node_pool
+        tls_secret_name = kubernetes_secret.hydra_tls_certificate.metadata.0.name
+        dsn             = var.dsn
+        salt            = random_password.hydra_salt.result
+        url_login       = var.url_login
+        url_logout      = var.url_logout
+        url_consent     = var.url_consent
+        system_secret   = random_password.hydra_system_secret.result
       }
     )
   ]
@@ -53,23 +52,4 @@ resource "kubernetes_secret" "hydra_tls_certificate" {
 module "cert" {
   source = "../tls-self-signed-cert"
   domain = var.host
-}
-
-resource "kubernetes_secret" "admin_hydra_tls_certificate" {
-  type = "kubernetes.io/tls"
-
-  metadata {
-    name      = "admin-hydra-tls-secret"
-    namespace = var.namespace
-  }
-
-  data = {
-    "tls.crt" = module.admin_cert.crt
-    "tls.key" = module.admin_cert.key
-  }
-}
-
-module "admin_cert" {
-  source = "../tls-self-signed-cert"
-  domain = "admin-${var.host}"
 }
