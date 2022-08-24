@@ -86,6 +86,10 @@ output "admin_uri" {
   value = "http://kratos-admin.${var.namespace}"
 }
 
+output "public_uri" {
+  value = "http://kratos-public.${var.namespace}"
+}
+
 module "cert" {
   source = "../tls-self-signed-cert"
   domain = var.host
