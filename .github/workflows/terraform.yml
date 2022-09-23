@@ -20,11 +20,9 @@ jobs:
     strategy:
       matrix:
         module:
-          - enmeshed
           - hydra
           - ingress
           - ingress-nginx
-          - keycloak
           - mysql
           - pact-broker
           - postgres
