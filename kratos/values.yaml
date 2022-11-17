@@ -51,7 +51,7 @@ kratos:
             - X-CSRF-Token
 
     selfservice:
-      default_browser_return_url: https://kratos-vercel.serlo-staging.dev/
+      default_browser_return_url: https://${domain}/
 
       methods:
         password:
@@ -59,37 +59,40 @@ kratos:
         link:
           enabled: true
           config:
-            base_url: https://kratos-vercel.serlo-staging.dev/api/.ory/
+            base_url: https://${domain}/api/.ory/
 
       flows:
         error:
-          ui_url: https://kratos-vercel.serlo-staging.dev/auth/error
+          ui_url: https://${domain}/auth/error
 
         settings:
-          ui_url: https://kratos-vercel.serlo-staging.dev/auth/settings
+          ui_url: https://${domain}/auth/settings
           privileged_session_max_age: 15m
 
         recovery:
           enabled: true
-          ui_url: https://kratos-vercel.serlo-staging.dev/auth/recovery
+          use: link
+          ui_url: https://${domain}/auth/recovery
 
         verification:
           enabled: true
-          ui_url: https://kratos-vercel.serlo-staging.dev/auth/verification
-          after:
-            default_browser_return_url: https://kratos-vercel.serlo-staging.dev/auth/login
+          ui_url: https://${domain}/auth/verification
 
         logout:
           after:
-            default_browser_return_url: https://kratos-vercel.serlo-staging.dev/auth/login
+            default_browser_return_url: https://${domain}/auth/login
 
         login:
-          ui_url: https://kratos-vercel.serlo-staging.dev/auth/login
+          ui_url: https://${domain}/auth/login
           lifespan: 10m
+          after:
+            password:
+              hooks:
+                - hook: require_verified_address
 
         registration:
           lifespan: 10m
-          ui_url: https://kratos-vercel.serlo-staging.dev/auth/registration
+          ui_url: https://${domain}/auth/registration
           after:
             hooks:
               - hook: web_hook
@@ -120,34 +123,34 @@ kratos:
         from_name: Serlo
         from_address: no-reply@mail.serlo.org
       # TODO: just for testing purpose, remove hard code
-      template_override_path: https://kratos-vercel.${domain}/api/.ory/mail-templates
+      template_override_path: https://${domain}/api/.ory/mail-templates
       templates:
         verification:
           valid:
             email:
-              subject: http://kratos-vercel.${domain}/api/.ory/mail-templates/verification/valid/email.subject.gotmpl
+              subject: http://${domain}/api/.ory/mail-templates/verification/valid/email.subject.gotmpl
               body:
-                html: http://kratos-vercel.${domain}/api/.ory/mail-templates/verification/valid/email.body.gotmpl
-                plaintext: http://kratos-vercel.${domain}/api/.ory/mail-templates/verification/valid/email.body.plaintext.gotmpl
+                html: http://${domain}/api/.ory/mail-templates/verification/valid/email.body.gotmpl
+                plaintext: http://${domain}/api/.ory/mail-templates/verification/valid/email.body.plaintext.gotmpl
           invalid:
             email:
-              subject: http://kratos-vercel.${domain}/api/.ory/mail-templates/verification/invalid/email.subject.gotmpl
+              subject: http://${domain}/api/.ory/mail-templates/verification/invalid/email.subject.gotmpl
               body:
-                html: http://kratos-vercel.${domain}/api/.ory/mail-templates/verification/invalid/email.body.gotmpl
-                plaintext: http://kratos-vercel.${domain}/api/.ory/mail-templates/verification/invalid/email.body.plaintext.gotmpl
+                html: http://${domain}/api/.ory/mail-templates/verification/invalid/email.body.gotmpl
+                plaintext: http://${domain}/api/.ory/mail-templates/verification/invalid/email.body.plaintext.gotmpl
         recovery:
           valid:
             email:
-              subject: http://kratos-vercel.${domain}/api/.ory/mail-templates/recovery/valid/email.subject.gotmpl
+              subject: http://${domain}/api/.ory/mail-templates/recovery/valid/email.subject.gotmpl
               body:
-                html: http://kratos-vercel.${domain}/api/.ory/mail-templates/recovery/valid/email.body.gotmpl
-                plaintext: http://kratos-vercel.${domain}/api/.ory/mail-templates/recovery/valid/email.body.plaintext.gotmpl
+                html: http://${domain}/api/.ory/mail-templates/recovery/valid/email.body.gotmpl
+                plaintext: http://${domain}/api/.ory/mail-templates/recovery/valid/email.body.plaintext.gotmpl
           invalid:
             email:
-              subject: http://kratos-vercel.${domain}/api/.ory/mail-templates/recovery/invalid/email.subject.gotmpl
+              subject: http://${domain}/api/.ory/mail-templates/recovery/invalid/email.subject.gotmpl
               body:
-                html: http://kratos-vercel.${domain}/api/.ory/mail-templates/recovery/invalid/email.body.gotmpl
-                plaintext: http://kratos-vercel.${domain}/api/.ory/mail-templates/recovery/invalid/email.body.plaintext.gotmpl
+                html: http://${domain}/api/.ory/mail-templates/recovery/invalid/email.body.gotmpl
+                plaintext: http://${domain}/api/.ory/mail-templates/recovery/invalid/email.body.plaintext.gotmpl
 deployment:
   resources:
     limits:
