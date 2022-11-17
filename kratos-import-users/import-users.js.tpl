@@ -27,14 +27,14 @@ const connection = mysql.createConnection({
 
 connection.connect(async (error) => {
   if (error) throw error
-  connection.query('SELECT * FROM user', async (error, result) => {
+  connection.query('SELECT * FROM user where id = 1 or id = 10 or id = 266 or id = 15473 or id = 26217 or id = 32543 or id = 64900 or id = 73435 or id = 87602 or id = 92258 or id = 169563 or id = 178807 or id = 240298 or id = 252992', async (error, result) => {
     if (error) throw error
     let allIdentities = []
-    for (let page = 1; page < result.length / 1000 + 1; page++) {
+    for (let page = 1; page < result.length / 100 + 1; page++) {
       allIdentities = [
         ...allIdentities,
         ...(await kratos
-          .adminListIdentities(1000, page)
+          .adminListIdentities(100, page)
           .then(({ data }) => data)),
       ]
     }
