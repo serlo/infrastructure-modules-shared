@@ -52,7 +52,14 @@ kratos:
 
     selfservice:
       default_browser_return_url: https://${domain}/
-
+      allowed_return_urls:
+        # TODO: try with wildcard later
+        - https://fr.${domain}/
+        - https://hi.${domain}/
+        - https://de.${domain}/
+        - https://ta.${domain}/
+        - https://en.${domain}/
+        - https://es.${domain}/
       methods:
         password:
           enabled: true
