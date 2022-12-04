@@ -32,7 +32,7 @@ kratos:
             # TODO: only in staging
             - http://localhost:3000/
             # TODO: var
-            - https://*.serlo-staging.dev
+            - https://*.${domain}
             # TODO: only in staging
             - https://*.serlo.vercel.app
           allowed_methods:
@@ -63,6 +63,8 @@ kratos:
       methods:
         password:
           enabled: true
+          config:
+            haveibeenpwned_enabled: false
         link:
           enabled: true
           config:
