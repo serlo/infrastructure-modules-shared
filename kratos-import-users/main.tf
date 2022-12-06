@@ -69,7 +69,7 @@ resource "kubernetes_cron_job" "kratos_import_users" {
               }
               resources {
                 requests = {
-                  "cpu" = "200m"
+                  "cpu"    = "200m"
                   "memory" = "250Mi"
                 }
               }
