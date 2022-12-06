@@ -147,7 +147,7 @@ async function importUsers(users) {
         },
       ],
     }
-    console.log('Importing user...')
+    console.log('Importing user ' + legacyUser.username)
     await kratos.adminCreateIdentity(user)
   }
 }
