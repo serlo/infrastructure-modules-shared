@@ -67,6 +67,12 @@ resource "kubernetes_cron_job" "kratos_import_users" {
                 name       = "import-users-volume"
                 read_only  = true
               }
+              resources {
+                requests = {
+                  "cpu" = "200m"
+                  "memory" = "250Mi"
+                }
+              }
             }
 
             volume {
