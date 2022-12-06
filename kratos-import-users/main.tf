@@ -59,7 +59,7 @@ resource "kubernetes_cron_job" "kratos_import_users" {
             container {
               name  = "kratos-import-users"
               image = "node:16"
-              args  = ["bash", "-c", "yarn init --yes && yarn add mysql @ory/kratos-client && node /tmp/import-users.js"]
+              args  = ["bash", "-c", "yarn init --yes && yarn add js-sha1 mysql @ory/client@0.2.0-alpha.4 && node /tmp/import-users.js"]
 
               volume_mount {
                 mount_path = "/tmp/import-users.js"
