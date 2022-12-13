@@ -90,21 +90,8 @@ const connection = mysql.createConnection({
 connection.connect(async (error) => {
   if (error) throw error
 
-  let allIdentities = []
-
-  for (let page = 1; true; page++) {
-    const data = await kratos
-      .adminListIdentities(10, page)
-      .then(({ data }) => data)
-    if (!data.length) break
-    allIdentities = [...allIdentities, ...data]
-  }
-
-  if (allIdentities) {
-    allIdentities.map(async (identity) => {
-      await kratos.adminDeleteIdentity(identity.id)
-    })
-  }
+// TODO: We should delete current users in kratos or update them.
+// For that, it is easier just to connect to its db.
 
   connection.query('SELECT * FROM user', async (error, result) => {
     if (error) throw error
@@ -134,7 +121,7 @@ async function importUsers(users) {
         password: {
           config: {
             // [p]assword[f]ormat = {SALT}{PASSWORD}
-            hashed_password: `$sha1$pf=e1NBTFR9e1BBU1NXT1JEfQ==$${passwordSaltBase64}$${hashedPasswordBase64}`,
+            hashed_password: `$sha1$pf=e1NBTFR9e1BBU1NXT1JEfQ==${"$"}$${passwordSaltBase64}${"$"}$${hashedPasswordBase64}`,
           },
         },
       },
