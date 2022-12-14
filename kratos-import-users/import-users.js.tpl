@@ -90,13 +90,28 @@ const connection = mysql.createConnection({
 connection.connect(async (error) => {
   if (error) throw error
 
-// TODO: We should delete current users in kratos or update them.
-// For that, it is easier just to connect to its db.
+  let allIdentities = []
+
+  for (let page = 1; true; page++) {
+    const data = await kratos
+      .adminListIdentities(10, page)
+      .then(({ data }) => data)
+    if (!data.length) break
+    allIdentities = [...allIdentities, ...data]
+  }
+  if (allIdentities) {
+    await Promise.all(
+      allIdentities.map(async (identity) => {
+        await kratos.adminDeleteIdentity(identity.id)
+        console.log(identity.traits.username + ' was deleted')
+      })
+    )
+  }
+
 
   connection.query('SELECT * FROM user', async (error, result) => {
     if (error) throw error
-    const usersWithValidUsername = result.filter(user => user.username.match(/^[\w\-]+$/g))
-    await importUsers(usersWithValidUsername)
+    await importUsers(result)
     console.log('Successful Import of Users')
     process.exit(0)
   })
@@ -104,6 +119,16 @@ connection.connect(async (error) => {
 
 async function importUsers(users) {
   for (const legacyUser of users) {
+    // normalize to match pattern [\w\-]
+    const username = legacyUser.username
+        .replaceAll('.', '-')
+        .replaceAll('Ã¼', 'ue')
+        .replaceAll('Ã¶', 'oe')
+        .replaceAll('Ã¤', 'ae')
+        .replaceAll('Ãœ', 'Ue')
+        .replaceAll('ÃŸ', 'ss')
+        .replaceAll('@', '-')
+
     const passwordSaltBase64 = Buffer.from(
       hashService.findSalt(legacyUser.password)
     ).toString('base64')
@@ -113,7 +138,7 @@ async function importUsers(users) {
     ).toString('base64')
     const user = {
       traits: {
-        username: legacyUser.username,
+        username,
         email: legacyUser.email,
         description: legacyUser.description || '',
       },
@@ -135,7 +160,11 @@ async function importUsers(users) {
         },
       ],
     }
-    console.log('Importing user ' + legacyUser.username)
-    await kratos.adminCreateIdentity(user)
+    console.log(
+      'Importing user ' + username
+    )
+    await kratos.adminCreateIdentity(user).catch((error) => {
+      throw new Error(error.message + ' while importing ' + legacyUser.username)
+    })
   }
 }
