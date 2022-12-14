@@ -116,6 +116,9 @@ kratos:
                       value: ${kratos_secret}
                       in: header
 
+    session:
+      lifespan: 720h
+
     secrets:
       cookie:
         - ${cookie_secret}
