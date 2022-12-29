@@ -68,9 +68,14 @@ resource "kubernetes_cron_job" "kratos_import_users" {
                 read_only  = true
               }
               resources {
+                limits = {
+                  cpu    = "200m"
+                  memory = "200Mi"
+                }
+
                 requests = {
-                  "cpu"    = "200m"
-                  "memory" = "250Mi"
+                  cpu    = "100m"
+                  memory = "100Mi"
                 }
               }
             }
