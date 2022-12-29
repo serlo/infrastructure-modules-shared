@@ -26,29 +26,6 @@ kratos:
     serve:
       public:
         base_url: https://${host}
-        cors:
-          enabled: true
-          allowed_origins:
-            # TODO: only in staging
-            - http://localhost:3000/
-            # TODO: var
-            - https://*.${domain}
-            # TODO: only in staging
-            - https://*.serlo.vercel.app
-          allowed_methods:
-            - POST
-            - GET
-            - PUT
-            - PATCH
-            - DELETE
-          allowed_headers:
-            - Authorization
-            - Cookie
-            - X-CSRF-Token
-          exposed_headers:
-            - Content-Type
-            - Set-Cookie
-            - X-CSRF-Token
 
     selfservice:
       default_browser_return_url: https://${domain}/
