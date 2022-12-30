@@ -94,18 +94,16 @@ connection.connect(async (error) => {
 
   for (let page = 1; true; page++) {
     const data = await kratos
-      .adminListIdentities(10, page)
+      .adminListIdentities(250, page)
       .then(({ data }) => data)
     if (!data.length) break
     allIdentities = [...allIdentities, ...data]
   }
   if (allIdentities) {
-    await Promise.all(
-      allIdentities.map(async (identity) => {
-        await kratos.adminDeleteIdentity(identity.id)
-        console.log(identity.traits.username + ' was deleted')
-      })
-    )
+    for (const identity of allIdentities) {
+      await kratos.adminDeleteIdentity(identity.id)
+      console.log(identity.traits.username + ' was deleted')
+    }
   }
 
 
