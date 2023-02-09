@@ -36,7 +36,7 @@ variable "smtp_uri" {
 }
 
 variable "from_email" {
-  type = string
+  type    = string
   default = "notifications@mail.serlo.org"
 }
 
@@ -77,15 +77,15 @@ resource "kubernetes_cron_job" "notification_mail" {
                 value = var.secret
               }
               env {
-                name = "DB_URI"
+                name  = "DB_URI"
                 value = var.db_uri
               }
               env {
-                name = "SMTP_URI"
+                name  = "SMTP_URI"
                 value = var.smtp_uri
               }
               env {
-                name = "FROM_EMAIL"
+                name  = "FROM_EMAIL"
                 value = var.from_email
               }
             }
