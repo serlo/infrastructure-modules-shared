@@ -17,11 +17,6 @@ variable "node_pool" {
   description = "Node pool to use"
 }
 
-variable "secret" {
-  description = "Shared secret between api.serlo.org and notification-mail-service"
-  type        = string
-}
-
 variable "api_host" {
   description = "URL to API endpoint"
   type        = string
@@ -74,7 +69,7 @@ resource "kubernetes_cron_job" "notification_mail" {
               }
               env {
                 name  = "SERLO_API_NOTIFICATION_EMAIL_SERVICE_SECRET"
-                value = var.secret
+                value = random_password.secret.result
               }
               env {
                 name  = "DB_URI"
@@ -95,4 +90,15 @@ resource "kubernetes_cron_job" "notification_mail" {
       }
     }
   }
+}
+
+resource "random_password" "secret" {
+  length  = 32
+  special = false
+}
+
+output "secret" {
+  description = "Shared secret between api and notification-mail-service"
+  value       = random_password.secret.result
+  sensitive   = true
 }
