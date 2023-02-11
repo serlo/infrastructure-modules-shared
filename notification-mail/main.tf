@@ -3,23 +3,19 @@ locals {
 }
 
 variable "namespace" {
-  description = "Kubernetes namespace to use"
-  type        = string
+  type = string
 }
 
 variable "image_tag" {
-  description = "Docker image tag to use"
-  type        = string
+  type = string
 }
 
 variable "node_pool" {
-  type        = string
-  description = "Node pool to use"
+  type = string
 }
 
-variable "api_host" {
-  description = "URL to API endpoint"
-  type        = string
+variable "api_graphql_url" {
+  type = string
 }
 
 variable "db_uri" {
@@ -65,7 +61,7 @@ resource "kubernetes_cron_job" "notification_mail" {
 
               env {
                 name  = "SERLO_API_GRAPHQL_URL"
-                value = "${var.api_host}/graphql"
+                value = var.api_graphql_url
               }
               env {
                 name  = "SERLO_API_NOTIFICATION_EMAIL_SERVICE_SECRET"
