@@ -26,7 +26,11 @@ kratos:
     serve:
       public:
         base_url: https://${host}
-
+        request_log:
+          disable_for_health: true
+      admin:
+        request_log:
+          disable_for_health: true
     selfservice:
       default_browser_return_url: https://${domain}/
       allowed_return_urls:
@@ -46,6 +50,17 @@ kratos:
           enabled: true
           config:
             base_url: https://${domain}/api/.ory/
+        oidc:
+          enabled: true
+          config:
+            providers:
+              - id: nbp
+                provider: generic
+                client_id: serlo
+                # TODO: pass as secret
+                client_secret: "****"
+                issuer_url: https://aai-dev.nbpdev.de/realms/nbp-aai
+                mapper_url: base64://${mapper}
 
       flows:
         error:

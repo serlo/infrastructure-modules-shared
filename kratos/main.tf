@@ -54,6 +54,7 @@ resource "helm_release" "kratos_deployment" {
         domain          = var.domain
         cookie_secret   = random_password.kratos_cookie_secret.result
         kratos_secret   = random_password.secret.result
+        mapper          = base64encode(file("${path.module}/user_mapper.jsonnet"))
       }
     )
   ]

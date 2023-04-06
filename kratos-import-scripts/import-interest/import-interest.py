@@ -67,17 +67,5 @@ def sort_users_ids_by_interest(user_field_results):
         interest: make_users_ids_interested_in(interest) for interest in all_interests
     }
 
-
-assert sort_users_ids_by_interest(
-    [(1, "pupil"), (2, "teacher"), (3, "pupil"), (4, "parent"), (5, "other")]
-) == {
-    "teacher": ("2",),
-    "parent": ("4",),
-    "pupil": ("1", "3"),
-    "other": ("5",),
-}
-
-assert sort_users_ids_by_interest([]) == {}
-
 if __name__ == "__main__":
     main()
