@@ -62,6 +62,7 @@ kratos:
 
         verification:
           enabled: true
+          use: link
           ui_url: https://${domain}/auth/verification
 
         logout:
