@@ -7,13 +7,17 @@ local rolesMap = {
   student: 'pupil'
 };
 
+local enshortenUuid(uuid) =
+  local uuidWithoutDomain = std.split(uuid, "@")[0];
+  std.split(uuidWithoutDomain, '-')[0];
+
 {
   identity: {
     traits: {
-      // it would be better to check if email is verified, but it seems that NBP respond with false for verified email adresses
+      // it would be better to check if email is verified, but it seems that NBP responds with false even for verified ones
       email: claims.email,
-      username:  std.split(claims.preferred_username, "@")[0],
-      interest: [if 'roll' in claims then rolesMap[claims.roll] else ""],
+      username: enshortenUuid(claims.preferred_username),
+      interest: if 'roll' in claims then rolesMap[claims.roll] else "",
     },
   },
 }
