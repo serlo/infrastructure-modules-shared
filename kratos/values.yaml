@@ -57,8 +57,7 @@ kratos:
               - id: nbp
                 provider: generic
                 client_id: serlo
-                # TODO: pass as secret
-                client_secret: "****"
+                client_secret: ${nbp_client_secret}
                 issuer_url: https://aai-dev.nbpdev.de/realms/nbp-aai
                 mapper_url: base64://${mapper}
 
