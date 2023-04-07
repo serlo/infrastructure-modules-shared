@@ -26,6 +26,11 @@ kratos:
     serve:
       public:
         base_url: https://${host}
+        request_log:
+          disable_for_health: true
+      admin:
+        request_log:
+          disable_for_health: true
 
     selfservice:
       default_browser_return_url: https://${domain}/
