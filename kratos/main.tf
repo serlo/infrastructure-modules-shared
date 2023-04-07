@@ -1,6 +1,5 @@
 variable "namespace" {
-  description = "Kubernetes namespace to use"
-  type        = string
+  type = string
 }
 
 variable "host" {
@@ -9,8 +8,7 @@ variable "host" {
 }
 
 variable "domain" {
-  type        = string
-  description = "Domain of the environment"
+  type = string
 }
 
 variable "dsn" {
@@ -19,13 +17,11 @@ variable "dsn" {
 }
 
 variable "chart_version" {
-  type        = string
-  description = "Kratos chart version to use"
+  type = string
 }
 
 variable "image_tag" {
-  type        = string
-  description = "Kratos image tag to use"
+  type = string
 }
 
 variable "smtp_password" {
