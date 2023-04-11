@@ -31,6 +31,7 @@ kratos:
       admin:
         request_log:
           disable_for_health: true
+
     selfservice:
       default_browser_return_url: https://${domain}/
       allowed_return_urls:
