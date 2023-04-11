@@ -45,16 +45,18 @@ resource "helm_release" "kratos_deployment" {
     templatefile(
       "${path.module}/values.yaml",
       {
-        host              = var.host
-        image_tag         = var.image_tag
-        tls_secret_name   = kubernetes_secret.kratos_tls_certificate.metadata.0.name
-        dsn               = var.dsn
-        smtp_password     = var.smtp_password
-        namespace         = var.namespace
-        domain            = var.domain
-        cookie_secret     = random_password.kratos_cookie_secret.result
-        kratos_secret     = random_password.secret.result
-        nbp_client_secret = var.nbp_client_secret
+        host            = var.host
+        image_tag       = var.image_tag
+        tls_secret_name = kubernetes_secret.kratos_tls_certificate.metadata.0.name
+        dsn             = var.dsn
+        smtp_password   = var.smtp_password
+        namespace       = var.namespace
+        domain          = var.domain
+        cookie_secret   = random_password.kratos_cookie_secret.result
+        kratos_secret   = random_password.secret.result
+        # TODO: remove ternary operator and sso_enabled variable once we want SSO also in production
+        nbp_client_secret = var.nbp_client_secret != "" ? var.nbp_client_secret : "we have no secret"
+        sso_enabled       = var.nbp_client_secret != "" ? true : false
         mapper            = base64encode(file("${path.module}/user_mapper.jsonnet"))
       }
     )
