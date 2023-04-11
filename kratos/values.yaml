@@ -52,7 +52,8 @@ kratos:
           config:
             base_url: https://${domain}/api/.ory/
         oidc:
-          enabled: true
+          # TODO: set to true once we want it also in production
+          enabled: ${sso_enabled}
           config:
             providers:
               - id: nbp
