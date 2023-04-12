@@ -2,7 +2,7 @@ local claims = std.extVar('claims');
 // TODO: delete after tests
 // std.trace("claims from nbp: %s" % [claims], claims)
 
-// TODO: complete
+// TODO: delete, since it will not be given in the id token
 local rolesMap = {
   student: 'pupil'
 };

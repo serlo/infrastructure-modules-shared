@@ -55,6 +55,7 @@ kratos:
           # TODO: set to true once we want it also in production
           enabled: ${sso_enabled}
           config:
+            base_redirect_uri: https://${domain}/api/.ory/
             providers:
               - id: nbp
                 provider: generic
