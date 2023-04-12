@@ -1,6 +1,5 @@
 variable "namespace" {
-  description = "Kubernetes namespace to use"
-  type        = string
+  type = string
 }
 
 variable "host" {
@@ -9,8 +8,7 @@ variable "host" {
 }
 
 variable "domain" {
-  type        = string
-  description = "Domain of the environment"
+  type = string
 }
 
 variable "dsn" {
@@ -19,18 +17,19 @@ variable "dsn" {
 }
 
 variable "chart_version" {
-  type        = string
-  description = "Kratos chart version to use"
+  type = string
 }
 
 variable "image_tag" {
-  type        = string
-  description = "Kratos image tag to use"
+  type = string
 }
 
 variable "smtp_password" {
-  type        = string
-  description = "SMTP password"
+  type = string
+}
+
+variable "nbp_client_secret" {
+  type = string
 }
 
 resource "helm_release" "kratos_deployment" {
@@ -39,7 +38,6 @@ resource "helm_release" "kratos_deployment" {
   chart      = "kratos"
   version    = var.chart_version
   namespace  = var.namespace
-  timeout    = 600
 
   values = [
     templatefile(
@@ -54,6 +52,10 @@ resource "helm_release" "kratos_deployment" {
         domain          = var.domain
         cookie_secret   = random_password.kratos_cookie_secret.result
         kratos_secret   = random_password.secret.result
+        # TODO: remove ternary operator and sso_enabled variable once we want SSO also in production
+        nbp_client_secret = var.nbp_client_secret != "" ? var.nbp_client_secret : "we have no secret"
+        sso_enabled       = var.nbp_client_secret != "" ? true : false
+        mapper            = base64encode(file("${path.module}/user_mapper.jsonnet"))
       }
     )
   ]
