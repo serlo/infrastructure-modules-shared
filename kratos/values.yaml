@@ -93,6 +93,8 @@ kratos:
             password:
               hooks:
                 - hook: require_verified_address
+            oidc:
+              default_browser_return_url: https://${domain}/auth/login
 
         registration:
           lifespan: 10m
