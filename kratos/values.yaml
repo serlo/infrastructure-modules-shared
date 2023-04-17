@@ -112,6 +112,9 @@ kratos:
                       name: x-kratos-key
                       value: ${kratos_secret}
                       in: header
+            oidc:
+              hooks:
+                - hook: session
 
     session:
       lifespan: 720h
