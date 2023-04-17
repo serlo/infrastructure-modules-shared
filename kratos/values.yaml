@@ -105,7 +105,7 @@ kratos:
                 config:
                   url: https://api.${domain}/kratos/register
                   method: POST
-                  body: https://${domain}/auth/after-registration-hook-payload.jsonnet
+                  body: base64://${user_id}
                   auth:
                     type: api_key
                     config:
