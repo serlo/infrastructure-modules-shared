@@ -101,6 +101,7 @@ kratos:
           ui_url: https://${domain}/auth/registration
           after:
             hooks:
+              # is not executed for case oidc, so we need it copied there
               - hook: web_hook
                 config:
                   url: https://api.${domain}/kratos/register
@@ -112,6 +113,20 @@ kratos:
                       name: x-kratos-key
                       value: ${kratos_secret}
                       in: header
+            oidc:
+              hooks:
+                - hook: web_hook
+                  config:
+                    url: https://api.${domain}/kratos/register
+                    method: POST
+                    body: base64://${user_id}
+                    auth:
+                      type: api_key
+                      config:
+                        name: x-kratos-key
+                        value: ${kratos_secret}
+                        in: header
+                - hook: session
 
     session:
       lifespan: 720h
