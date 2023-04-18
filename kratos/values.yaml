@@ -127,6 +127,7 @@ kratos:
                         value: ${kratos_secret}
                         in: header
                 - hook: session
+              default_browser_return_url: https://${domain}/auth/login
 
     session:
       lifespan: 720h
