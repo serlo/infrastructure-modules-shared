@@ -1,6 +1,6 @@
 image:
   tag: ${image_tag}
-  repository: eu.gcr.io/serlo-shared/kratos
+  repository: oryd/kratos
 ingress:
   public:
     enabled: true
