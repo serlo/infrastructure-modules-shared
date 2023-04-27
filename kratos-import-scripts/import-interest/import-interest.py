@@ -42,7 +42,7 @@ def main():
             )
 
         postgres_connection.commit()
-        print('success')
+        print("success")
     except Exception as exception:
         raise exception
     finally:
@@ -66,6 +66,7 @@ def sort_users_ids_by_interest(user_field_results):
     return {
         interest: make_users_ids_interested_in(interest) for interest in all_interests
     }
+
 
 if __name__ == "__main__":
     main()
