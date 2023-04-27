@@ -33,7 +33,7 @@ def main():
 
         for account in unsynced_accounts:
             response = requests.post(
-                os.getenv("http://serlo-org-database-layer.api:8080"),
+                "http://serlo-org-database-layer.api:8080",
                 json={
                     "type": "UserCreateMutation",
                     "payload": {
@@ -56,7 +56,7 @@ def main():
             # but kratos was not updated with legacy_id
             else:
                 response = requests.post(
-                    os.getenv("http://serlo-org-database-layer.api:8080"),
+                    "http://serlo-org-database-layer.api:8080",
                     json={
                         "type": "AliasQuery",
                         "payload": {
