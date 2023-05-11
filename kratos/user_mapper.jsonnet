@@ -9,7 +9,7 @@ local enshortenUuid(uuid) =
     traits: {
       // it would be better to check if email is verified, but it seems that NBP responds with false even for verified ones
       [if "email" in claims then "email" else null]: claims.email,
-      username: enshortenUuid(claims.preferred_username),
+      [if "preferred_username" in claims then "username" else null]: enshortenUuid(claims.preferred_username),
       interest: "",
     },
   },
