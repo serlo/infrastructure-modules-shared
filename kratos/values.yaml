@@ -180,7 +180,7 @@ deployment:
   resources:
     limits:
       cpu: 80m
-      memory: 320Mi
+      memory: 400Mi
     requests:
       cpu: 40m
       memory: 128Mi
