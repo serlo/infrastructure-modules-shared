@@ -61,7 +61,7 @@ kratos:
                 provider: generic
                 client_id: ${nbp_client_id}
                 client_secret: ${nbp_client_secret}
-                issuer_url: https://aai-dev.nbpdev.de/realms/nbp-aai
+                issuer_url: https://aai-test.nbpdev.de/realms/nbp-aai
                 mapper_url: base64://${mapper}
 
       flows:
