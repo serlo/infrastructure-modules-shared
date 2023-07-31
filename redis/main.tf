@@ -1,6 +1,6 @@
 resource "helm_release" "redis" {
   name       = "redis"
-  repository = "https://raw.githubusercontent.com/bitnami/charts/eb5f9a9513d987b519f0ecd732e7031241c50328/bitnami"
+  repository = "https://raw.githubusercontent.com/bitnami/charts/archive-full-index/bitnami"
   chart      = "redis"
   version    = var.chart_version
   namespace  = var.namespace
