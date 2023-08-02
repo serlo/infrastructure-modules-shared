@@ -31,7 +31,7 @@ variable "from_email" {
   default = "notifications@mail.serlo.org"
 }
 
-resource "kubernetes_cron_job" "notification_mail" {
+resource "kubernetes_cron_job_v1" "notification_mail" {
   metadata {
     name      = local.name
     namespace = var.namespace

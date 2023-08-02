@@ -57,7 +57,7 @@ resource "helm_release" "database" {
   ]
 }
 
-resource "kubernetes_cron_job" "mongodump" {
+resource "kubernetes_cron_job_v1" "mongodump" {
   metadata {
     name      = "rocket-chat-mongodump"
     namespace = var.namespace
