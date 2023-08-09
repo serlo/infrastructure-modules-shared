@@ -4,6 +4,7 @@ resource "helm_release" "redis" {
   chart      = "redis"
   version    = var.chart_version
   namespace  = var.namespace
+  atomic     = true
 
   set {
     name  = "image.tag"
