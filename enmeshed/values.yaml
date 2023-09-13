@@ -1,7 +1,7 @@
 config:
   database:
     connectionString: "mongodb://localhost:27017"
-    
+
   transportLibrary: 
     baseUrl: ${transport_base_url}
     platformClientId: ${platform_client_id}
@@ -31,7 +31,7 @@ config:
         - triggers:
           - transport.messageReceived
           target: 
-            url: ${api_url}
+            url: ${api_url}/enmeshed/webhook
             headers: 
               X-API-KEY: ${api_key}
             publishInterval: 5

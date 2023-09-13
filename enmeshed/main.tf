@@ -27,8 +27,7 @@ variable "transport_base_url" {
 }
 
 resource "helm_release" "enmeshed_deployment" {
-  name = "enmeshed"
-  # repository = "https://ghcr.io/nmshd"
+  name      = "enmeshed"
   chart     = " oci://ghcr.io/nmshd/connector-helm-chart"
   version   = var.chart_version
   namespace = var.namespace
@@ -46,4 +45,3 @@ resource "helm_release" "enmeshed_deployment" {
     )
   ]
 }
-
