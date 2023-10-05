@@ -1,0 +1,42 @@
+config:
+  database:
+    connectionString: "mongodb://localhost:27017"
+
+  transportLibrary: 
+    baseUrl: ${transport_base_url}
+    platformClientId: ${platform_client_id}
+    platformClientSecret: ${platform_client_secret}
+
+  infrastructure: 
+    httpServer: 
+      enabled: true
+      cors: 
+        origin: false
+      apiKey: ${api_key}
+
+  modules: 
+    sync: 
+      enabled: true
+      interval: 5
+    autoAcceptRelationshipCreationChanges: 
+      enabled: false
+      responseContent: 
+    coreHttpApi: 
+      enabled: true
+      docs: 
+        enabled: false
+    webhooksV2: 
+      enabled: true
+      webhooks:       
+        - triggers:
+          - transport.messageReceived
+          target: 
+            url: ${api_url}/enmeshed/webhook
+            headers: 
+              X-API-KEY: ${api_key}
+            publishInterval: 5
+
+pod:
+  ferretdb:
+    enabled: true
+    image: all-in-one
