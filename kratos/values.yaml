@@ -62,7 +62,7 @@ kratos:
                 client_id: ${nbp_client_id}
                 client_secret: ${nbp_client_secret}
                 issuer_url: https://aai-test.nbpdev.de/realms/nbp-aai
-                mapper_url: base64://${mapper}
+                mapper_url: base64://${nbp_user_mapper}
 
       flows:
         error:
@@ -97,7 +97,7 @@ kratos:
                   config:
                     url: https://api.${domain}/kratos/updateLastLogin
                     method: POST
-                    body: base64://${user_id}
+                    body: base64://${user_id_mapper}
                     response:
                       ignore: true
             oidc:
@@ -113,7 +113,7 @@ kratos:
                 config:
                   url: https://api.${domain}/kratos/register
                   method: POST
-                  body: base64://${user_id}
+                  body: base64://${user_id_mapper}
                   auth:
                     type: api_key
                     config:
@@ -126,7 +126,7 @@ kratos:
                   config:
                     url: https://api.${domain}/kratos/register
                     method: POST
-                    body: base64://${user_id}
+                    body: base64://${user_id_mapper}
                     auth:
                       type: api_key
                       config:
