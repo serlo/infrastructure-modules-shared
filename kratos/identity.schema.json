@@ -24,7 +24,7 @@
           "pattern": "^[\\w\\-]+$",
           "maxLength": 32
         },
-        "optedNewsletterIn": {
+        "subscribedNewsletter": {
           "type": "boolean"
         },
         "description": {
