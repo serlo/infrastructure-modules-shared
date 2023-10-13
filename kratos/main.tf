@@ -59,8 +59,9 @@ resource "helm_release" "kratos_deployment" {
         nbp_client_id     = var.nbp_client.id != "" ? var.nbp_client.id : "anything otherwise the yml will be invalid"
         nbp_client_secret = var.nbp_client.secret != "" ? var.nbp_client.secret : "anything otherwise the yml will be invalid"
         sso_enabled       = var.nbp_client.secret != "" ? true : false
-        mapper            = base64encode(file("${path.module}/user_mapper.jsonnet"))
-        user_id           = base64encode("function (ctx) { userId: ctx.identity.id }")
+        identity_schema   = base64encode(file("${path.module}/identity.schema.json"))
+        nbp_user_mapper   = base64encode(file("${path.module}/nbp_user_mapper.jsonnet"))
+        user_id_mapper    = base64encode("function (ctx) { userId: ctx.identity.id }")
       }
     )
   ]
