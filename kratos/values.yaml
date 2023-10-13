@@ -93,6 +93,13 @@ kratos:
             password:
               hooks:
                 - hook: require_verified_address
+                - hook: web_hook
+                  config:
+                    url: https://api.${domain}/kratos/updateLastLogin
+                    method: POST
+                    body: base64://${user_id}
+                    response:
+                      ignore: true
             oidc:
               default_browser_return_url: https://${domain}/auth/login
 
