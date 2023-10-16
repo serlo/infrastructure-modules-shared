@@ -120,6 +120,19 @@ kratos:
                       name: x-kratos-key
                       value: ${kratos_secret}
                       in: header
+              - hook: web_hook
+                config:
+                  url: https://${mailchimp_server}.api.mailchimp.com/3.0/lists/a7bb2bbc4f/members
+                  method: POST
+                  body: base64://${subscribe_newsletter_mapper}
+                  can_interrupt: false
+                  response:
+                    ignore: true
+                  auth:
+                    type: basic_auth
+                    config:
+                      user: serlo
+                      password: ${newsletter_api_key}
             oidc:
               hooks:
                 - hook: web_hook
@@ -134,6 +147,19 @@ kratos:
                         value: ${kratos_secret}
                         in: header
                 - hook: session
+                - hook: web_hook
+                  config:
+                    url: https://${mailchimp_server}.api.mailchimp.com/3.0/lists/a7bb2bbc4f/members
+                    method: POST
+                    body: base64://${subscribe_newsletter_mapper}
+                    can_interrupt: false
+                    response:
+                      ignore: true
+                    auth:
+                      type: basic_auth
+                      config:
+                        user: serlo
+                        password: ${newsletter_api_key}
               default_browser_return_url: https://${domain}/auth/login
 
     session:
