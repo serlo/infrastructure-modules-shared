@@ -1,0 +1,7 @@
+image:
+  tag: 7.0.2
+architecture: standalone
+global:
+  storageClass: standard
+auth:
+  rootPassword: ${mongodb_root_password}
