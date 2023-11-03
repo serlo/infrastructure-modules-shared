@@ -28,7 +28,7 @@ config:
     webhooksV2:
       enabled: true
       webhooks:
-        - triggers:
+        triggers:
           - consumption.attributeCreated
           - consumption.attributeDeleted
           - consumption.attributeSucceded
@@ -45,8 +45,8 @@ config:
           - transport.messageSent
           - transport.peerRelationshipTemplateLoaded
           - transport.relationshipChanged
-          target:
-            url: ${api_url}/enmeshed/webhook
-            headers:
-              X-API-KEY: ${api_key}
-            publishInterval: 5
+        target:
+          url: ${api_url}/enmeshed/webhook
+          headers:
+            X-API-KEY: ${api_key}
+          publishInterval: 5
