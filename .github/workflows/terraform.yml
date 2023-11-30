@@ -25,7 +25,6 @@ jobs:
           - ingress
           - ingress-nginx
           - mysql
-          - pact-broker
           - postgres
           - redis
           - rocket-chat
